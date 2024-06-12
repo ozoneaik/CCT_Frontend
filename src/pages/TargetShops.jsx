@@ -14,7 +14,10 @@ function TargetShops( ) {
                                 <div className={'d-flex justify-content-end align-items-center my-3'}>
                                     <span className={'mr-3'}>เป้าที่จะทำ</span>
                                     <input type="number" className={'form-control mr-3'} style={{maxWidth: 300}}/>
-                                    <button className={'btn btn-primary'}>บันทึก</button>
+                                    <button className={'btn btn-primary'}>
+                                        <i className="fa-solid fa-floppy-disk mr-2"></i>
+                                        <span>บันทึก</span>
+                                    </button>
                                 </div>
                                 <div className={'table-responsive'}>
                                     <table className={'table table-bordered'}>

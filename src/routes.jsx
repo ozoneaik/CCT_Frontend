@@ -7,6 +7,7 @@ import TargetShops from "./pages/TargetShops.jsx";
 import Training from "./pages/Training.jsx";
 import Booths from "./pages/Booths.jsx";
 import NewProducts from "./pages/NewProducts.jsx";
+import NotFound from "./pages/NotFound.jsx";
 
 export const router = createBrowserRouter([
     {path: '/', element: <Main/>},
@@ -17,4 +18,5 @@ export const router = createBrowserRouter([
     {path: '/Booths', element: <Booths/>},
     {path: '/NewProducts', element: <NewProducts/>},
     {path: '/login', element: <h1>Login</h1>},
+    {path: '*',element : <NotFound/>}
 ])

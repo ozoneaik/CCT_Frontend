@@ -40,7 +40,10 @@ function RepeatOrders() {
                                     </table>
                                 </div>
                                 <div className={'d-flex justify-content-end'}>
-                                    <button type={'button'} className={'btn btn-primary'}>บันทึก</button>
+                                    <button className={'btn btn-primary'}>
+                                        <i className="fa-solid fa-floppy-disk mr-2"></i>
+                                        <span>บันทึก</span>
+                                    </button>
                                 </div>
                             </div>
                         </div>
