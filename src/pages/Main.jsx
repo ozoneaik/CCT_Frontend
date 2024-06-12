@@ -27,13 +27,8 @@ function Main() {
             }
         });
     }, [])
-
-    const C = () => {
-        console.log(DateTime)
-    }
     return (
         <Content>
-            <button onClick={C}>hert</button>
             <div className={'container'}>
                 <div className={'row'}>
                     <div className={'col-12'}>

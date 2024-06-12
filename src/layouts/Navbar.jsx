@@ -1,6 +1,7 @@
 import axiosClient from "../axios.js";
 import {useStateContext} from "../contexts/ContextProvider.jsx";
 import Logo from '../assets/img/Logo.png'
+import {Link} from "react-router-dom";
 
 function Navbar() {
     const {setCurrentUser, setUserToken} = useStateContext();
@@ -18,11 +19,11 @@ function Navbar() {
     return (
         <nav className="main-header navbar navbar-expand-md navbar-light navbar-white">
             <div className="container">
-                <a href="#" className="navbar-brand">
+                <Link to={'/'} className="navbar-brand">
                     <img src={Logo} alt="AdminLTE Logo"
                          className="brand-image "/>
                     <span className="brand-text font-weight-light">Concrete Target</span>
-                </a>
+                </Link>
 
                 {/*<button className="navbar-toggler order-1" type="button" data-toggle="collapse"*/}
                 {/*        data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false"*/}
