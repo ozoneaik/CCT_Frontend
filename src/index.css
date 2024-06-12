@@ -11,6 +11,11 @@ p{margin-bottom: 0}
 body{
     height: 100%;
 }
-h1,h2,h3,h4,h5,h6{
-    margin-bottom: 0;
+h1,h2,h3,h4,h5,h6{margin-bottom: 0;}
+
+.small-box{
+    transition: all 0.2s;
+}
+.small-box:hover{
+    background-color: #f15721 !important;
 }
