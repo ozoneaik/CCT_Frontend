@@ -20,6 +20,9 @@ function ShopNameComponent({name='ไม่ได้ระบุ',code='ไม�
                             <h3>ร้าน&nbsp;{name}</h3>
                         </div>
                     </div>
+                    <div className={''}>
+                        <i className="fa-solid fa-store" style={{fontSize: 45,color: '#ccc'}}></i>
+                    </div>
                 </div>
             </div>
 

@@ -15,7 +15,7 @@ function Login() {
         LoginApi(username,password,(user,token) => {
             setCurrentUser(user);
             setUserToken(token);
-            navigate('/main')
+            navigate('/')
 
         })
     };

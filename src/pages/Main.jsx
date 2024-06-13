@@ -10,7 +10,7 @@ import {Link} from "react-router-dom";
 
 function Main() {
 
-    const [DateTime, setDateTime] = useState(new Date());
+    const [DateTime, setDateTime] = useState();
     useEffect(() => {
         flatpickr("#myID", {
             "locale": Thai,
@@ -27,8 +27,14 @@ function Main() {
             }
         });
     }, [])
+
+    const D = ()=>{
+        console.log(DateTime)
+    }
+
     return (
         <Content>
+            <button className={'btn btn-primary'} onClick={D}>Click</button>
             <div className={'container'}>
                 <div className={'row'}>
                     <div className={'col-12'}>
@@ -81,7 +87,7 @@ function Main() {
                                         <td>
                                             <div className={'d-flex justify-content-center align-items-center'}>
                                                 <p className={'mb-0 mr-3'}>10000</p>
-                                                <Link to={'/TargetShops'} className={'btn btn-sm btn-primary'}>
+                                                <Link to={`/TargetShops/${DateTime}/10021512`} className={'btn btn-sm btn-primary'}>
                                                     <i className="fa-solid fa-pen-to-square"></i>
                                                 </Link>
                                             </div>
