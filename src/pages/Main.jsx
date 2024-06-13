@@ -10,8 +10,9 @@ import {Link} from "react-router-dom";
 
 function Main() {
 
-    const [DateTime, setDateTime] = useState();
+    const [DateTime, setDateTime] = useState('');
     useEffect(() => {
+        setDateTime(formatDate(new Date()));
         flatpickr("#myID", {
             "locale": Thai,
             defaultDate: new Date().toISOString(),
@@ -28,13 +29,14 @@ function Main() {
         });
     }, [])
 
-    const D = ()=>{
-        console.log(DateTime)
-    }
+    const formatDate = (date) => {
+        const month = ('0' + (date.getMonth() + 1)).slice(-2); // เพิ่ม 1 เพราะ getMonth() คืนค่าตั้งแต่ 0-11
+        const year = date.getFullYear();
+        return `${month}/${year}`;
+    };
 
     return (
         <Content>
-            <button className={'btn btn-primary'} onClick={D}>Click</button>
             <div className={'container'}>
                 <div className={'row'}>
                     <div className={'col-12'}>
