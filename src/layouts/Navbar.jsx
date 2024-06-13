@@ -2,9 +2,13 @@ import axiosClient from "../axios.js";
 import {useStateContext} from "../contexts/ContextProvider.jsx";
 import Logo from '../assets/img/Logo.png'
 import {Link} from "react-router-dom";
+import {useEffect} from "react";
 
 function Navbar() {
-    const {setCurrentUser, setUserToken} = useStateContext();
+    const {currentUser,setCurrentUser, setUserToken} = useStateContext();
+    useEffect(()=>{
+        console.log(currentUser);
+    },[]);
 
 
     const logout = (ev) => {
@@ -24,21 +28,16 @@ function Navbar() {
                          className="brand-image "/>
                     <span className="brand-text font-weight-light">Concrete Target</span>
                 </Link>
-
-                {/*<button className="navbar-toggler order-1" type="button" data-toggle="collapse"*/}
-                {/*        data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false"*/}
-                {/*        aria-label="Toggle navigation">*/}
-                {/*    <span className="navbar-toggler-icon"></span>*/}
-                {/*</button>*/}
-
                 <ul className="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
-
-                    <li className="nav-item dropdown">
-                        <button className={'btn btn-danger btn-sm'}>
-                            <i className="fa-solid fa-right-from-bracket mr-1"></i>
-                            <span>ออกจากระบบ</span>
+                    <li className={'nav-item mr-3'}>
+                        <span>{currentUser.name}</span>
+                    </li>
+                    <li className="nav-item">
+                        <button onClick={(e) => logout(e)} className={'btn btn-danger btn-sm'}>
+                            <i className="fa-solid fa-right-from-bracket"></i>
                         </button>
                     </li>
+
                 </ul>
             </div>
         </nav>
