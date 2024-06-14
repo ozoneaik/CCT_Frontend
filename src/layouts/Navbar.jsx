@@ -4,15 +4,12 @@ import Logo from '../assets/img/Logo.png'
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 
+// eslint-disable-next-line react/prop-types
 function Navbar({ username, saleId }) {
-    const { setCurrentUser, setUserToken, currentUser } = useStateContext();
-    const [localUsername, setLocalUsername] = useState('');
+    const { setCurrentUser, setUserToken } = useStateContext();
     const [localSaleId, setLocalSaleId] = useState('');
 
     useEffect(() => {
-        if (username !== undefined) {
-            setLocalUsername(username);
-        }
         if (saleId !== undefined) {
             setLocalSaleId(saleId);
         }
@@ -36,8 +33,6 @@ function Navbar({ username, saleId }) {
                 <ul className="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
                     <li className={'nav-item mr-3'}>
                         <span className={'text-bold'}>[&nbsp;รหัสเซลล์&nbsp;{localSaleId}&nbsp;]</span>
-                        &nbsp;
-                        <span>{localUsername}</span>
                     </li>
                     <li className="nav-item">
                         <button onClick={(e) => logout(e)} className={'btn btn-danger btn-sm'}>

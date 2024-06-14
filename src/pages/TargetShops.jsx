@@ -81,7 +81,7 @@ function TargetShops() {
                 <div className={'row'}>
                     <div className={'col-12'}>
                         <ShopNameComponent name={'นายเอ'} code={'10021512'}/>
-                        <CardContentComponent CardHeader={false} CardBody={true}>
+                        <CardContentComponent CardHeader={true} HeaderTitle={'เป้าหมาย'} CardBody={true}>
                             <div className={'d-flex justify-content-end align-items-center my-3'}>
                                 <span className={'mr-3'}>เป้าที่จะทำ</span>
                                 <input type="number" onChange={(e) => {

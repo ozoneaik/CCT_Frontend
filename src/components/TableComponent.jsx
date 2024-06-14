@@ -4,6 +4,11 @@ function TableComponent(props) {
     // eslint-disable-next-line react/prop-types
     const { thead, tbody, dataFields } = props;
 
+    // ฟังก์ชันสำหรับจัดรูปแบบตัวเลขให้มี comma
+    const formatNumber = (num) => {
+        return num.toLocaleString();
+    };
+
     return (
         <div className={'table-responsive'}>
             <table className={'table table-bordered'}>
@@ -30,7 +35,9 @@ function TableComponent(props) {
                         <tr key={rowIndex}>
                             {/* eslint-disable-next-line react/prop-types */}
                             {dataFields.map((field, fieldIndex) => (
-                                <td key={fieldIndex}>{row[field]}</td>
+                                <td key={fieldIndex}>
+                                    {typeof row[field] === 'number' ? formatNumber(row[field]) : row[field]}
+                                </td>
                             ))}
                         </tr>
                     ))
