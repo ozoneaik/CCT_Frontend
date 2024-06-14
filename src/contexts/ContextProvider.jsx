@@ -9,19 +9,19 @@ const StateContext = createContext({
     setUserToken: () => {},
 });
 
-
 export const ContextProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState({});
-    const [userToken, _setUserToken] = useState(localStorage.getItem('TOKEN') || '');
+    const [userToken, setUserTokenState] = useState(localStorage.getItem('TOKEN') || '');
+
     const setUserToken = (token) => {
-        console.log('token ==> ',token)
         if (token) {
-            localStorage.setItem('TOKEN', token)
+            localStorage.setItem('TOKEN', token);
         } else {
-            localStorage.removeItem('TOKEN')
+            localStorage.removeItem('TOKEN');
         }
-        _setUserToken(token);
-    }
+        setUserTokenState(token);
+    };
+
     return (
         <StateContext.Provider
             value={{

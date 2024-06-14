@@ -5,7 +5,8 @@ export function AlertSuccess(title = 'สำเร็จ' , text = 'เพิ่
         icon : 'success',
         title,
         text,
-        showConfirmButton: false,
-        timer: 1500
+        confirmButtonText: 'ตกลง',
+        // showConfirmButton: false,
+        // timer: 1500
     })
 }

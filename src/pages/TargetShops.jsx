@@ -1,16 +1,79 @@
 import Content from "../layouts/Content.jsx";
 import ShopNameComponent from "../components/ShopNameComponent.jsx";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
-import {CreateWiTargetSaleApi} from "../api/wi_target_sale_api.js";
+import {CreateWiTargetSaleApi, ListApi, ListTargetApi, UpdateWiTargetSaleApi} from "../api/wi_target_sale_api.js";
+import {AlertSuccess} from "../dialogs/AlertSuccess.js";
+import {AlertError} from "../dialogs/AlertError.js";
+import {AlertInfo} from "../dialogs/AlertInfo.js";
+import TableComponent from "../components/TableComponent.jsx";
+import CardContentComponent from "../components/CardContentComponent.jsx";
 
 function TargetShops() {
+    // กำหนดหัวตาราง
+    const theadTarget = ['ป-ด','ยอดขาย'];
+    const dataFieldsTarget = ['target_month', 'target_sale']; // ฟิลด์ที่ต้องการแสดงในตาราง
+    const theadHistory = ['ป-ด','จำนวนสินค้า', 'ยอดขาย'];
+    const dataFieldsHistory = ['target_month', 'product_count', 'target_sale']; // ฟิลด์ที่ต้องการแสดงในตาราง
+    //เก็บค่าเป้าหมาย
     const [target_sale, setTarget_sale] = useState(0);
+    // รายการเป้าหมาย
+    const [listTarget, setListTarget] = useState([]);
+    const [list, setList] = useState([]);
+    //ดึงเดือน ปี และ รหัสลุกค้า จาก uri
+    const {year, month, cust_id} = useParams();
 
-    const {year,month,cust_id} = useParams();
+    useEffect(() => {
+        getWiTargetSale();
+        getAllTargetSale();
+    }, []);
+
+    const getWiTargetSale = ()=> {
+        ListTargetApi(year,month,cust_id,(listTarget)=>{
+            setListTarget(listTarget)
+        });
+    }
+
+    const getAllTargetSale = () =>{
+        ListApi(cust_id,(list)=>{
+            setList(list)
+        })
+    }
 
     const onClickSave = () => {
-        CreateWiTargetSaleApi(year,month,cust_id,target_sale)
+        CreateWiTargetSaleApi(year, month, cust_id, target_sale)
+            .then(({data, status}) => {
+                if (status === 200) {
+                    console.log('200')
+                    let message = data.message;
+                    AlertSuccess('สำเร็จ', message)
+                    setListTarget([]);
+                    getWiTargetSale();
+                    getAllTargetSale();
+                }
+            }).catch((error) => {
+                let Error = error.response;
+                if (Error.status === 422){
+                    let DataToUpdate = Error.data.wi_target_sale;
+                    DataToUpdate.target_sale = target_sale;
+                    AlertInfo('error ' + Error.status, Error.data.message,DataToUpdate,'wi_target_sale/update',
+                        (data,uri)=>{
+                            UpdateWiTargetSaleApi(data,uri).then(({data,status}) => {
+                                if (status === 200) {
+                                    AlertSuccess('สำเร็จ',data.message);
+                                    getWiTargetSale();
+                                    getAllTargetSale();
+                                }
+                            }).catch((error) => {
+                                let Error = error.response;
+                                AlertError('error ' + Error.status, Error.data.message);
+                            })
+                        })
+                }else{
+                    AlertError('error ' + Error.status, Error.data.message);
+                }
+        })
+
     }
     return (
         <Content>
@@ -18,61 +81,22 @@ function TargetShops() {
                 <div className={'row'}>
                     <div className={'col-12'}>
                         <ShopNameComponent name={'นายเอ'} code={'10021512'}/>
-                        <div className={'card'}>
-                            <div className={'card-body'}>
-                                <div className={'d-flex justify-content-end align-items-center my-3'}>
-                                    <span className={'mr-3'}>เป้าที่จะทำ</span>
-                                    <input type="number" onChange={(e) => {
-                                        setTarget_sale(e.target.value)
-                                    }} className={'form-control mr-3'} style={{maxWidth: 300}}/>
-                                    <button className={'btn btn-primary'} onClick={onClickSave}>
-                                        <i className="fa-solid fa-floppy-disk mr-2"></i>
-                                        <span>บันทึก</span>
-                                    </button>
-                                </div>
-                                <div className={'table-responsive'}>
-                                    <table className={'table table-bordered'}>
-                                        <thead>
-                                        <tr>
-                                            <th>ป-ด</th>
-                                            <th>ยอดขาย</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr>
-                                            <td>{year}/{month}</td>
-                                            <td>8900</td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+                        <CardContentComponent CardHeader={false} CardBody={true}>
+                            <div className={'d-flex justify-content-end align-items-center my-3'}>
+                                <span className={'mr-3'}>เป้าที่จะทำ</span>
+                                <input type="number" onChange={(e) => {
+                                    setTarget_sale(e.target.value)
+                                }} className={'form-control mr-3'} style={{maxWidth: 300}}/>
+                                <button className={'btn btn-primary'} onClick={onClickSave}>
+                                    <i className="fa-solid fa-floppy-disk mr-2"></i>
+                                    <span>บันทึก</span>
+                                </button>
                             </div>
-                        </div>
-                        <div className={'card'}>
-                            <div className={'card-header'}>
-                                <h3 className={'card-title'}>ประวัติ</h3>
-                            </div>
-                            <div className={'card-body'}>
-                                <div className={'table-responsive'}>
-                                    <table className={'table table-bordered'}>
-                                        <thead>
-                                        <tr>
-                                            <th>ป-ด</th>
-                                            <th>จำนวนสินค้า</th>
-                                            <th>ยอดขาย</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr>
-                                            <td>ๅ</td>
-                                            <td>ๅ</td>
-                                            <td>ๅ</td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
+                            <TableComponent thead={theadTarget} tbody={listTarget} dataFields={dataFieldsTarget}/>
+                        </CardContentComponent>
+                        <CardContentComponent CardHeader={true} CardBody={true} HeaderTitle={'ประวัติ'}>
+                            <TableComponent thead={theadHistory} tbody={list} dataFields={dataFieldsHistory}/>
+                        </CardContentComponent>
                     </div>
                 </div>
             </div>

@@ -10,9 +10,10 @@ import '../src/assets/plugins/adminlte/js/adminlte.min.js'
 import '../src/assets/plugins/fontawesome.js'
 import '../src/assets/plugins/jquery-3.7.1.js'
 
+const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {};
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-    <ContextProvider>
+    <ContextProvider initialCurrentUser={currentUser}>
         <RouterProvider router={router}/>
     </ContextProvider>
 )

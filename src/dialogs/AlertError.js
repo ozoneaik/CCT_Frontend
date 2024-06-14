@@ -4,6 +4,7 @@ export function AlertError (title= 'เกิดข้อผิดพลาด' 
     Swal.fire({
         icon: 'error',
         title,
-        text
+        text,
+        confirmButtonText: 'ตกลง'
     })
 }

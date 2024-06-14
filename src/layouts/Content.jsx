@@ -4,15 +4,13 @@ import {Navigate} from "react-router-dom";
 
 // eslint-disable-next-line react/prop-types
 function Content({children}) {
-    const {userToken} = useStateContext();
+    const {currentUser,userToken} = useStateContext();
     if (!userToken){
         return <Navigate to="/login" />;
     }
-
-    
     return (
         <>
-            <Navbar/>
+            <Navbar username={currentUser.name} saleId={currentUser.username} />
             <div className={'content-wrapper'}>
                 <section className="content-header">
                     <div className="container-fluid">
