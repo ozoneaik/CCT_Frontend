@@ -23,7 +23,7 @@ function Main() {
                     altFormat: "M/Y", //defaults to "F Y"
                     theme: "light" // defaults to "light"
                 })
-            ], onChange: (selectedDates, dateStr, instance) => {
+            ], onChange: (selectedDates, dateStr) => {
                 setDateTime(dateStr)
             }
         });
