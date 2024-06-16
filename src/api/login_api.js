@@ -16,3 +16,10 @@ export function LoginApi(username,password,onSuccess){
         AlertError('error '+Error.status,Error.data.message);
     });
 }
+
+export function GetProfileApi(onPassed){
+    axiosClient.get(`/me`)
+        .then(({data}) =>{
+            onPassed(data);
+        });
+}

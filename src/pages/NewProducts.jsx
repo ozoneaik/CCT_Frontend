@@ -1,47 +1,46 @@
+import React, { useState } from 'react';
 import Content from "../layouts/Content.jsx";
 import ShopNameComponent from "../components/ShopNameComponent.jsx";
 
 function NewProducts() {
+    const [products, setProducts] = useState([
+        { id: '11517', name: 'PUMPKIN ดอกสว่านโรตารี่ 13x600mm', quantity: 0 }
+    ]);
+
+    const addProductRow = () => {
+        const newProduct = { id: '', name: '', quantity: 0 };
+        setProducts([...products, newProduct]);
+    };
+
+    const handleInputChange = (index, event) => {
+        const { name, value } = event.target;
+        const newProducts = [...products];
+        newProducts[index][name] = value;
+        setProducts(newProducts);
+    };
+
+    const removeProductRow = (index) => {
+        const newProducts = products.filter((_, i) => i !== index);
+        setProducts(newProducts);
+    };
+
     return (
         <Content>
             <div className={'container'}>
-                <ShopNameComponent name="นายเอ" code={'10021512'}/>
+                <ShopNameComponent name="นายเอ" code={'10021512'} />
                 <div className={'row'}>
                     <div className={'col-12'}>
                         <div className={'card'}>
                             <div className={'card-body'}>
                                 <div className={'d-flex justify-content-between align-items-center mb-3'}>
                                     <h5>รายการสินค้านำเสนอใหม่</h5>
-                                    <button type="button" className="btn btn-primary rounded-pill"
-                                            data-toggle="modal" data-target="#exampleModal">
+                                    <button
+                                        type="button"
+                                        className="btn btn-primary rounded-pill"
+                                        onClick={addProductRow}
+                                    >
                                         <i className="fa-solid fa-plus"></i>
                                     </button>
-                                    <div className="modal fade" id="exampleModal" tabIndex="-1"
-                                         role="dialog" aria-labelledby="exampleModalLabel"
-                                         aria-hidden="true">
-                                        <div className="modal-dialog" role="document">
-                                            <div className="modal-content">
-                                                <div className="modal-header">
-                                                    <h5 className="modal-title" id="exampleModalLabel">เพิ่มรายการสินค้า</h5>
-                                                    <button type="button" className="close"
-                                                            data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div className="modal-body">
-                                                    ...
-                                                </div>
-                                                <div className="modal-footer">
-                                                    <button type="button" className="btn btn-secondary"
-                                                            data-dismiss="modal">Close
-                                                    </button>
-                                                    <button type="button" className="btn btn-primary">Save
-                                                        changes
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
                                 <div className={'table-responsive'}>
                                     <table className={'table table-bordered'}>
@@ -54,18 +53,46 @@ function NewProducts() {
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr>
-                                            <td>11517</td>
-                                            <td>PUMPKIN ดอกสว่านโรตารี่ 13x600mm</td>
-                                            <td>
-                                                <input type="number" className={'form-control'}/>
-                                            </td>
-                                            <td>
-                                                <button type="button" className="btn btn-sm btn-danger">
-                                                    <i className="fa-solid fa-trash"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
+                                        {products.map((product, index) => (
+                                            <tr key={index}>
+                                                <td>
+                                                    <input
+                                                        type="text"
+                                                        className={'form-control'}
+                                                        name="id"
+                                                        value={product.id}
+                                                        onChange={(e) => handleInputChange(index, e)}
+                                                    />
+                                                </td>
+                                                <td>
+                                                    <input
+                                                        type="text"
+                                                        className={'form-control'}
+                                                        name="name"
+                                                        value={product.name}
+                                                        onChange={(e) => handleInputChange(index, e)}
+                                                    />
+                                                </td>
+                                                <td>
+                                                    <input
+                                                        type="number"
+                                                        className={'form-control'}
+                                                        name="quantity"
+                                                        value={product.quantity}
+                                                        onChange={(e) => handleInputChange(index, e)}
+                                                    />
+                                                </td>
+                                                <td>
+                                                    <button
+                                                        type="button"
+                                                        className="btn btn-sm btn-danger"
+                                                        onClick={() => removeProductRow(index)}
+                                                    >
+                                                        <i className="fa-solid fa-trash"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
                                         </tbody>
                                     </table>
                                 </div>
@@ -79,7 +106,6 @@ function NewProducts() {
                         </div>
                     </div>
                 </div>
-
             </div>
         </Content>
     );
