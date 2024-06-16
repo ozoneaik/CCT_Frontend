@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
 import Content from "../layouts/Content.jsx";
 import ShopNameComponent from "../components/ShopNameComponent.jsx";
+import {useState} from "react";
 
 function NewProducts() {
     const [products, setProducts] = useState([

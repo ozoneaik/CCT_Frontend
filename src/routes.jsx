@@ -1,5 +1,4 @@
 import {createBrowserRouter} from "react-router-dom";
-import App from "./App.jsx";
 import Main from "./pages/Main.jsx";
 import FeaturedPromotions from "./pages/FeaturedPromotions.jsx";
 import RepeatOrders from "./pages/RepeatOrders.jsx";
@@ -14,7 +13,7 @@ export const router = createBrowserRouter([
     {path: '/', element: <Main/>},
     {path: '/main', element: <Main/>},
     {path: '/TargetShops/:month/:year/:cust_id', element: <TargetShops/>}, // เป้าที่จะทำ
-    {path: '/FeaturePromotion', element: <FeaturedPromotions/>}, // รายการโปรโมชั่นนำเสนอ
+    {path: '/FeaturePromotion/:month/:year/:cust_id', element: <FeaturedPromotions/>}, // รายการโปรโมชั่นนำเสนอ
     {path: '/RepeatOrders', element: <RepeatOrders/>}, // รายการสินค้าสั่งซ้ำ
     {path: '/Training', element: <Training/>}, // ระยะเวลาอบรม
     {path: '/Booths', element: <Booths/>}, // ระยะเวลาออกบูธ

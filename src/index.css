@@ -31,3 +31,7 @@ h1, h2, h3, h4, h5, h6 ,p{
 .small-box:hover {
     background-color: #f15721 !important;
 }
+
+.form-control:read-only{
+    background-color: #fff !important;
+}
