@@ -17,7 +17,8 @@ function Navbar({ username, saleId }) {
 
     const logout = (ev) => {
         ev.preventDefault();
-        axiosClient.post("/logout").then((res) => {
+        axiosClient.post("/logout").then((res )=> {
+            console.log('res => ',res.status)
             setCurrentUser({});
             setUserToken(null);
         });
@@ -27,7 +28,7 @@ function Navbar({ username, saleId }) {
         <nav className="main-header navbar navbar-expand-md navbar-light navbar-white">
             <div className="container">
                 <Link to={'/'} className="navbar-brand">
-                    <img src={Logo} alt="AdminLTE Logo" className="brand-image" />
+                    <img src={Logo ? Logo : '#'} alt="AdminLTE Logo" className="brand-image" />
                     <span className="brand-text font-weight-light">Concrete Target</span>
                 </Link>
                 <ul className="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">

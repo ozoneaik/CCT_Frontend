@@ -109,3 +109,7 @@
     font-weight: 100;
     font-style: italic;
 }
+
+* {
+    font-family: 'Sarabun', sans-serif;
+}

@@ -5,6 +5,7 @@ import {Navigate} from "react-router-dom";
 // eslint-disable-next-line react/prop-types
 function Content({children}) {
     const {currentUser,userToken} = useStateContext();
+    console.log(userToken)
     if (!userToken){
         return <Navigate to="/login" />;
     }
