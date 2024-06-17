@@ -1,6 +1,6 @@
 export default function CardContentComponent(
     // eslint-disable-next-line react/prop-types
-    {children, CardHeader = false, CardBody = false, HeaderTitle = 'ไม่ได้กำหนด'}
+    {children, CardHeader = false, CardBody = true, HeaderTitle = 'ไม่ได้กำหนด'}
 ) {
     return (
         <div className={'card'}>

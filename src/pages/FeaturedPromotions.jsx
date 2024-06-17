@@ -19,6 +19,7 @@ function FeaturedPromotions() {
 
     const getWiTargetPro = () => {
         ListTargetProApi(year, month, cust_id, (data) => {
+
             setPromotions(data.listTargetPro);
         })
     }
@@ -29,7 +30,6 @@ function FeaturedPromotions() {
     };
 
     const handleInputChange = (index, event) => {
-        console.log(event)
         const {name, value} = event.target;
         const newPromotion = [...promotions];
         newPromotion[index][name] = value;

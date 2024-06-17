@@ -124,7 +124,7 @@ function Main() {
                                         <td>
                                             <div className={'d-flex justify-content-center align-items-center'}>
                                                 <p className={'mb-0 mr-3'}>1</p>
-                                                <Link to={'Booths'} className={'btn btn-sm btn-primary'}>
+                                                <Link to={`Booths/${DateTime}/10021512`} className={'btn btn-sm btn-primary'}>
                                                     <i className="fa-solid fa-pen-to-square"></i>
                                                 </Link>
                                             </div>

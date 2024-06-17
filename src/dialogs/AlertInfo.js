@@ -1,5 +1,4 @@
 import Swal from "sweetalert2";
-import {UpdateWiTargetSaleApi} from "../api/wi_target_sale_api.js";
 
 export function AlertInfo(title,text,data,uri,onsuccess) {
     console.log(data,uri);
@@ -15,6 +14,24 @@ export function AlertInfo(title,text,data,uri,onsuccess) {
         if (result.isConfirmed) {
             console.log(uri,'from Alert Info')
             onsuccess(data,uri)
+        }
+    })
+}
+
+export function AlertQuestion(title='แน่ใจหรือไม่',text='คุณแน่ใจหรือไม่',onPassed){
+    Swal.fire({
+        icon: "question",
+        title,
+        text,
+        confirmButtonText: 'ยืนยัน',
+        showCancelButton : true,
+        cancelButtonText : 'ยกเลิก',
+        allowOutsideClick: false,
+    }).then((result)=>{
+        if (result.isConfirmed) {
+            onPassed(true)
+        }else{
+            onPassed(false)
         }
     })
 }

@@ -1,6 +1,6 @@
 import Swal from "sweetalert2";
 
-export function AlertSuccess(title = 'สำเร็จ' , text = 'เพิ่มข้อความม') {
+export function AlertSuccess(title = 'สำเร็จ' , text) {
     Swal.fire({
         icon : 'success',
         title,

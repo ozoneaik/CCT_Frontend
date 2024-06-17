@@ -16,7 +16,7 @@ export const router = createBrowserRouter([
     {path: '/FeaturePromotion/:month/:year/:cust_id', element: <FeaturedPromotions/>}, // รายการโปรโมชั่นนำเสนอ
     {path: '/RepeatOrders', element: <RepeatOrders/>}, // รายการสินค้าสั่งซ้ำ
     {path: '/Training', element: <Training/>}, // ระยะเวลาอบรม
-    {path: '/Booths', element: <Booths/>}, // ระยะเวลาออกบูธ
+    {path: '/Booths/:month/:year/:cust_id', element: <Booths/>}, // ระยะเวลาออกบูธ
     {path: '/NewProducts', element: <NewProducts/>}, // รายการสินค้านำเสนอใหม่
     {path: '/login', element: <Login/>},
     {path: '*',element : <NotFound/>}

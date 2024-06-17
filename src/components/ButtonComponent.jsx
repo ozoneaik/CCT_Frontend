@@ -1,8 +1,8 @@
 // eslint-disable-next-line react/prop-types
-export function ButtonComponent({title='ไม่ได้ระบุ',BtnBg='btn-primary',onClick}) {
+export function ButtonComponent({title,BtnStyle='btn-primary',onClick, Icon='fa-floppy-disk'}) {
     return (
-        <button className={`btn ${BtnBg}`} onClick={onClick}>
-            <i className="fa-solid fa-floppy-disk mr-2"></i>
+        <button className={`btn ${BtnStyle}`} onClick={onClick}>
+            <i className={`fa-solid ${Icon} ${title ? 'mr-2' : ''}`}></i>
             <span>{title}</span>
         </button>
     )
