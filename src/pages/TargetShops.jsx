@@ -8,6 +8,7 @@ import {AlertError} from "../dialogs/AlertError.js";
 import {AlertInfo} from "../dialogs/AlertInfo.js";
 import TableComponent from "../components/TableComponent.jsx";
 import CardContentComponent from "../components/CardContentComponent.jsx";
+import {ButtonComponent} from "../components/ButtonComponent.jsx";
 
 function TargetShops() {
     // กำหนดหัวตาราง
@@ -70,6 +71,7 @@ function TargetShops() {
                             })
                         })
                 }else{
+                    console.log('hello')
                     AlertError('error ' + Error.status, Error.data.message);
                 }
         })
@@ -87,10 +89,7 @@ function TargetShops() {
                                 <input type="number" onChange={(e) => {
                                     setTarget_sale(e.target.value)
                                 }} className={'form-control mr-3'} style={{maxWidth: 300}}/>
-                                <button className={'btn btn-primary'} onClick={onClickSave}>
-                                    <i className="fa-solid fa-floppy-disk mr-2"></i>
-                                    <span>บันทึก</span>
-                                </button>
+                                <ButtonComponent title={'บันทึก'} onClick={()=>onClickSave()}/>
                             </div>
                             <TableComponent thead={theadTarget} tbody={listTarget} dataFields={dataFieldsTarget}/>
                         </CardContentComponent>

@@ -25,7 +25,7 @@ function Login() {
                 <div className="card card-danger card-outline">
                     <div className="card-body login-card-body">
                         <div className={'bg-dark'}>
-                            <img src={LogoLogin} alt="" width="100%" height={'100%'}/>
+                            <img src={LogoLogin? LogoLogin : ''} alt="" width="100%" height={'100%'}/>
                         </div>
                         <p className="login-box-msg text-dark text-bold mt-2" style={{fontSize: 30}}>เข้าสู่ระบบ</p>
 

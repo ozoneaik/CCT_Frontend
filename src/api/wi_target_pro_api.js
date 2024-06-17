@@ -12,3 +12,26 @@ export function ListTargetProApi(year, month, cust_id, onPassed) {
         }
     )
 }
+
+export function getSkuNameApi(pro_sku,onPassed){
+    axiosClient.get(`/wi_target_pro/get_sku_name/${pro_sku}`)
+        .then((response) => {
+            if (response && response.status === 200) {
+                onPassed(response.data);
+            }
+        }).catch(() => {
+            onPassed('กรอกรหัสสินค้าที่ถูกต้อง')
+    })
+}
+
+export function CreateTargetProApi(promotions,onPassed){
+    axiosClient.post(`/wi_target_pro/create`,promotions)
+        .then(({data, status}) => {
+            if (status === 200) {
+                onPassed(data,status);
+            }
+        }).catch((error) =>{
+            let Error = error.response;
+            onPassed(Error.data,Error.status)
+    })
+}

@@ -19,11 +19,12 @@ export function ListTargetApi(year, month, cust_id, onPassed) {
         .then(({data, status}) => {
             console.log('listTarget >> ',data.listTarget)
             if (status === 200) {
-                onPassed(data.listTarget)
+                onPassed(data.listTarget,status)
             }
         }).catch((error) => {
             let Error = error.response;
-            onPassed(Error.data)
+        console.log(Error)
+            onPassed(Error.data,Error.status)
         }
     )
 }
