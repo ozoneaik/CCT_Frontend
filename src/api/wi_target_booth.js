@@ -10,29 +10,42 @@ export function getTargetBoothApi(year, month, cust_id, onPassed) {
             let Error = error.response;
             onPassed(Error.data)
         }
-    )
+    );
 }
 
-export function CreateTargetBoothApi(startdate,enddate,booth_month,custid, onPassed) {
-    axiosClient.post(`wi_target_booth/create`, {startdate,enddate,booth_month,custid})
+export function CreateTargetBoothApi(startdate, enddate, booth_month, custid, onPassed) {
+    axiosClient.post(`wi_target_booth/create`, {startdate, enddate, booth_month, custid})
         .then(({data, status}) => {
-            console.log('asldfjlasdjf',status,data)
+            console.log('asldfjlasdjf', status, data)
             if (status === 200) {
                 console.log('helloworld')
-                onPassed(data,status)
+                onPassed(data, status)
             }
         }).then((error) => {
-        let Error = error.response;
-        onPassed(Error.data,Error.status)
-    })
+            let Error = error.response;
+            onPassed(Error.data, Error.status)
+        }
+    );
 }
 
-export function DeleteTargetBoothApi(id,onPassed){
+export function DeleteTargetBoothApi(id, onPassed) {
     axiosClient.delete(`wi_target_booth/delete/${id}`)
         .then(({data, status}) => {
-            onPassed(data,status);
+            onPassed(data, status);
         }).catch((error) => {
             let Error = error.response;
-            onPassed(Error.data,Error.status)
-    })
+            onPassed(Error.data, Error.status)
+        }
+    );
+}
+
+export function SaveTargetBoothSkuApi(boothSku, onPassed) {
+    axiosClient.post(`/wi_target_booth/create-boothSku`, {boothSku})
+        .then(({data, status}) => {
+            onPassed(data,status)
+        }).catch((error) => {
+            let Error = error.response;
+            onPassed(Error.data, Error.status)
+        }
+    );
 }

@@ -4,7 +4,7 @@ import FeaturedPromotions from "./pages/FeaturedPromotions.jsx";
 import RepeatOrders from "./pages/RepeatOrders.jsx";
 import TargetShops from "./pages/TargetShops.jsx";
 import Training from "./pages/Training.jsx";
-import Booths from "./pages/Booths.jsx";
+import Booths from "./pages/BoothPage/Booths.jsx";
 import NewProducts from "./pages/NewProducts.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import Login from "./pages/Login.jsx";
