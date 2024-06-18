@@ -24,6 +24,8 @@ function Training() {
     const [trains, setTrains] = useState([]);
     const [DateTime, setDateTime] = useState("");
     const {year, month, cust_id} = useParams();
+    const minDate = `${year}-${month}-01`;
+    const maxDate = `${year}-${month}-31`;
 
     useEffect(() => {
         DATERANGE();
@@ -34,7 +36,8 @@ function Training() {
     const DATERANGE = () => {
         flatpickr("#DateRange", {
             "locale": Thai,
-            // defaultDate: new Date().toISOString(),
+            maxDate,
+            minDate,
             mode: 'range',
             plugins: [], onChange: (selectedDates, dateStr) => {
                 setDateTime(dateStr);

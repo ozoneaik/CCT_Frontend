@@ -16,6 +16,8 @@ import ModalBoothSku from "./ModalBoothSku.jsx";
 
 function Booths() {
     const {year, month, cust_id} = useParams();
+    const minDate = `${year}-${month}-01`;
+    const maxDate = `${year}-${month}-31`;
 
     const [booths, setBooths] = useState([]);
     const [DateTime, setDateTime] = useState();
@@ -28,6 +30,8 @@ function Booths() {
     const DATERANGE = () => {
         flatpickr("#DateRange", {
             "locale": Thai,
+            minDate: minDate,
+            maxDate : maxDate,
             // defaultDate: [`${year}-${month}-1`, `${year}-${month}-5`],
             mode: 'range',
             plugins: [],
