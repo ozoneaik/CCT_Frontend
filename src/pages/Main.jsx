@@ -13,8 +13,13 @@ function Main() {
     const [DateTime, setDateTime] = useState('');
     useEffect(() => {
         // setDateTime(formatDate(new Date()));
-        const savedDateTime = localStorage.getItem('DateTime') || formatDate(new Date());
+        let savedDateTime = localStorage.getItem('DateTime') || formatDate(new Date());
         setDateTime(savedDateTime);
+        DATEPICKER(savedDateTime);
+
+    }, [])
+
+    const DATEPICKER = (savedDateTime) =>{
 
         flatpickr("#myID", {
             "locale": Thai,
@@ -28,10 +33,11 @@ function Main() {
                 })
             ], onChange: (selectedDates, dateStr) => {
                 setDateTime(dateStr)
+                console.log('hello world')
                 localStorage.setItem('DateTime', dateStr);
             }
         });
-    }, [])
+    }
 
     const formatDate = (date) => {
         const month = ('0' + (date.getMonth() + 1)).slice(-2); // เพิ่ม 1 เพราะ getMonth() คืนค่าตั้งแต่ 0-11
