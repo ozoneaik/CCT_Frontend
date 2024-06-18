@@ -1,7 +1,7 @@
 import {ButtonComponent} from "../../components/ButtonComponent.jsx";
 import {useState} from "react";
 import {getSkuNameApi} from "../../api/wi_target_pro_api.js";
-import {SaveTargetBoothSkuApi} from "../../api/wi_target_booth.js";
+import {SaveTargetBoothSkuApi} from "../../api/wi_target_booth_api.js";
 import {AlertSuccess} from "../../dialogs/AlertSuccess.js";
 import {AlertError} from "../../dialogs/AlertError.js";
 

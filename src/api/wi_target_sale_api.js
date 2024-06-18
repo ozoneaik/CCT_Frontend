@@ -39,7 +39,7 @@ export function CreateWiTargetSaleApi(year, month, cust_id, target_sale) {
 
 export function UpdateWiTargetSaleApi(data, uri) {
     console.log(uri, data)
-    return axiosClient.post(`${uri}`, {
+    return axiosClient.put(`${uri}`, {
         cust_id: data.custid,
         target_month: data.target_month,
         target_sale: data.target_sale,

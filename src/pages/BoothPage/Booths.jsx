@@ -7,7 +7,7 @@ import "flatpickr/dist/flatpickr.min.css";
 import {Thai} from "flatpickr/dist/l10n/th.js";
 import CardContentComponent from "../../components/CardContentComponent.jsx";
 import {useParams} from "react-router-dom";
-import {CreateTargetBoothApi, DeleteTargetBoothApi, getTargetBoothApi} from "../../api/wi_target_booth.js";
+import {CreateTargetBoothApi, DeleteTargetBoothApi, getTargetBoothApi} from "../../api/wi_target_booth_api.js";
 import {ButtonComponent} from "../../components/ButtonComponent.jsx";
 import {AlertSuccess} from "../../dialogs/AlertSuccess.js";
 import {AlertError} from "../../dialogs/AlertError.js";

@@ -16,9 +16,7 @@ export function getTargetBoothApi(year, month, cust_id, onPassed) {
 export function CreateTargetBoothApi(startdate, enddate, booth_month, custid, onPassed) {
     axiosClient.post(`wi_target_booth/create`, {startdate, enddate, booth_month, custid})
         .then(({data, status}) => {
-            console.log('asldfjlasdjf', status, data)
             if (status === 200) {
-                console.log('helloworld')
                 onPassed(data, status)
             }
         }).then((error) => {
