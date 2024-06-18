@@ -12,10 +12,13 @@ function Main() {
 
     const [DateTime, setDateTime] = useState('');
     useEffect(() => {
-        setDateTime(formatDate(new Date()));
+        // setDateTime(formatDate(new Date()));
+        const savedDateTime = localStorage.getItem('DateTime') || formatDate(new Date());
+        setDateTime(savedDateTime);
+
         flatpickr("#myID", {
             "locale": Thai,
-            defaultDate: new Date().toISOString(),
+            defaultDate: savedDateTime,
             plugins: [
                 new monthSelectPlugin({
                     shorthand: true, //defaults to false
@@ -25,6 +28,7 @@ function Main() {
                 })
             ], onChange: (selectedDates, dateStr) => {
                 setDateTime(dateStr)
+                localStorage.setItem('DateTime', dateStr);
             }
         });
     }, [])
@@ -108,7 +112,7 @@ function Main() {
                                         <td>
                                             <div className={'d-flex justify-content-center align-items-center'}>
                                                 <p className={'mb-0 mr-3'}>5</p>
-                                                <Link to={'NewProducts'} className={'btn btn-sm btn-primary'}>
+                                                <Link to={`NewProducts/${DateTime}/10021512`} className={'btn btn-sm btn-primary'}>
                                                     <i className="fa-solid fa-pen-to-square"></i>
                                                 </Link>
                                             </div>

@@ -17,7 +17,7 @@ export const router = createBrowserRouter([
     {path: '/RepeatOrders', element: <RepeatOrders/>}, // รายการสินค้าสั่งซ้ำ
     {path: '/Training/:month/:year/:cust_id', element: <Training/>}, // ระยะเวลาอบรม
     {path: '/Booths/:month/:year/:cust_id', element: <Booths/>}, // ระยะเวลาออกบูธ
-    {path: '/NewProducts', element: <NewProducts/>}, // รายการสินค้านำเสนอใหม่
+    {path: '/NewProducts/:month/:year/:cust_id', element: <NewProducts/>}, // รายการสินค้านำเสนอใหม่
     {path: '/login', element: <Login/>},
     {path: '*',element : <NotFound/>}
 ])
