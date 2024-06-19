@@ -12,12 +12,12 @@ import Login from "./pages/Login.jsx";
 export const router = createBrowserRouter([
     {path: '/', element: <Main/>},
     {path: '/main', element: <Main/>},
-    {path: '/TargetShops/:month/:year/:cust_id', element: <TargetShops/>}, // เป้าที่จะทำ
-    {path: '/FeaturePromotion/:month/:year/:cust_id', element: <FeaturedPromotions/>}, // รายการโปรโมชั่นนำเสนอ
-    {path: '/RepeatOrders', element: <RepeatOrders/>}, // รายการสินค้าสั่งซ้ำ
-    {path: '/Training/:month/:year/:cust_id', element: <Training/>}, // ระยะเวลาอบรม
-    {path: '/Booths/:month/:year/:cust_id', element: <Booths/>}, // ระยะเวลาออกบูธ
-    {path: '/NewProducts/:month/:year/:cust_id', element: <NewProducts/>}, // รายการสินค้านำเสนอใหม่
+    {path: '/TargetShops/:month/:year/:cust_id/:cust_name', element: <TargetShops/>}, // เป้าที่จะทำ
+    {path: '/FeaturePromotion/:month/:year/:cust_id/:cust_name', element: <FeaturedPromotions/>}, // รายการโปรโมชั่นนำเสนอ
+    {path: '/RepeatOrders/:month/:year/:cust_id/:cust_name', element: <RepeatOrders/>}, // รายการสินค้าสั่งซ้ำ
+    {path: '/Training/:month/:year/:cust_id/:cust_name', element: <Training/>}, // ระยะเวลาอบรม
+    {path: '/Booths/:month/:year/:cust_id/:cust_name', element: <Booths/>}, // ระยะเวลาออกบูธ
+    {path: '/NewProducts/:month/:year/:cust_id/:cust_name', element: <NewProducts/>}, // รายการสินค้านำเสนอใหม่
     {path: '/login', element: <Login/>},
     {path: '*',element : <NotFound/>}
 ])

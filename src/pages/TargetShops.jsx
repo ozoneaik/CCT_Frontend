@@ -22,7 +22,9 @@ function TargetShops() {
     const [listTarget, setListTarget] = useState([]);
     const [list, setList] = useState([]);
     //ดึงเดือน ปี และ รหัสลุกค้า จาก uri
-    const {year, month, cust_id} = useParams();
+    const {year, month, cust_id,cust_name} = useParams();
+
+    const [showLoading, setShowLoading] = useState(true);
 
     useEffect(() => {
         getWiTargetSale();
@@ -32,6 +34,9 @@ function TargetShops() {
     const getWiTargetSale = ()=> {
         ListTargetApi(year,month,cust_id,(listTarget)=>{
             setListTarget(listTarget)
+            if (!listTarget.length > 0){
+                setShowLoading(false)
+            }
         });
     }
 
@@ -82,7 +87,7 @@ function TargetShops() {
             <div className={'container'}>
                 <div className={'row'}>
                     <div className={'col-12'}>
-                        <ShopNameComponent name={'นายเอ'} code={'10021512'}/>
+                        <ShopNameComponent name={cust_name} code={cust_id}/>
                         <CardContentComponent CardHeader={true} HeaderTitle={'เป้าหมาย'} CardBody={true}>
                             <div className={'d-flex justify-content-end align-items-center my-3'}>
                                 <span className={'mr-3'}>เป้าที่จะทำ</span>
@@ -91,10 +96,10 @@ function TargetShops() {
                                 }} className={'form-control mr-3'} style={{maxWidth: 300}}/>
                                 <ButtonComponent title={'บันทึก'} onClick={()=>onClickSave()}/>
                             </div>
-                            <TableComponent thead={theadTarget} tbody={listTarget} dataFields={dataFieldsTarget}/>
+                            <TableComponent thead={theadTarget} tbody={listTarget} dataFields={dataFieldsTarget} showLoading={showLoading}/>
                         </CardContentComponent>
                         <CardContentComponent CardHeader={true} CardBody={true} HeaderTitle={'ประวัติ'}>
-                            <TableComponent thead={theadHistory} tbody={list} dataFields={dataFieldsHistory}/>
+                            <TableComponent thead={theadHistory} tbody={list} dataFields={dataFieldsHistory} showLoading={showLoading}/>
                         </CardContentComponent>
                     </div>
                 </div>

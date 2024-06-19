@@ -35,3 +35,19 @@ h1, h2, h3, h4, h5, h6 ,p{
 .form-control:read-only{
     background-color: #fff !important;
 }
+
+
+.thead-sticky th {
+    position: sticky;
+    top: 0;
+    background-color: #ffffff; /* หรือสีพื้นหลังที่คุณต้องการ */
+    z-index: 2; /* เพื่อให้ส่วนหัวอยู่ด้านบนสุด */
+}
+
+.D{
+    position: sticky;
+    top: 0;
+    left: 0;
+    background-color: #ffffff; /* หรือสีพื้นหลังที่คุณต้องการ */
+    z-index: 3 !important; /* เพื่อให้ส่วนหัวอยู่ด้านบนสุด */
+}

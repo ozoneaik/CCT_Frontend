@@ -45,7 +45,15 @@ function TableComponent(props) {
                     <tr>
                         {/* eslint-disable-next-line react/prop-types */}
                         <td colSpan={thead.length} className="text-center">
-                            ไม่มีข้อมูล
+
+                            {
+                                // eslint-disable-next-line react/prop-types
+                                props.showLoading === true ? (
+                                    <span>ไม่มีข้อมูล</span>
+                                ) : (
+                                    <Loading/>
+                                )
+                            }
                         </td>
                     </tr>
                 )}

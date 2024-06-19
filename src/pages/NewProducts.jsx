@@ -11,7 +11,7 @@ import {AlertError} from "../dialogs/AlertError.js";
 function NewProducts() {
     const [skus, setSkus] = useState([]);
 
-    const {year,month,cust_id} = useParams();
+    const {year,month,cust_id,cust_name} = useParams();
 
     useEffect(() => {
         getTargetNewSkus();
@@ -64,14 +64,14 @@ function NewProducts() {
 
     const onSave = ()=>{
         CreateTargetNewSkuApi(skus,(data,status)=>{
-            status === 200 ? AlertSuccess() : AlertError();
+            status === 200 ? AlertSuccess(data.message) : AlertError(data.message,data.subMessage);
             getTargetNewSkus();
         });
     }
     return (
         <Content>
             <div className={'container'}>
-                <ShopNameComponent name="นายเอ" code={'10021512'}/>
+                <ShopNameComponent name={cust_name} code={cust_id}/>
                 <div className={'row'}>
                     <div className={'col-12'}>
                         <div className={'card'}>

@@ -23,7 +23,7 @@ function Training() {
 
     const [trains, setTrains] = useState([]);
     const [DateTime, setDateTime] = useState("");
-    const {year, month, cust_id} = useParams();
+    const {year, month, cust_id,cust_name} = useParams();
     const minDate = `${year}-${month}-01`;
     const maxDate = `${year}-${month}-31`;
 
@@ -98,7 +98,7 @@ function Training() {
             <div className={'container'}>
                 <div className={'row'}>
                     <div className={'col-12'}>
-                        <ShopNameComponent name={'นายเอ'} code={'10021512'}/>
+                        <ShopNameComponent name={cust_name} code={cust_id}/>
                         <div className={'card'}>
                             <div className={'card-body'}>
                                 <div className={'d-flex justify-content-between align-items-center mb-3'}>

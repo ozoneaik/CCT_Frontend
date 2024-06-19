@@ -11,7 +11,7 @@ import {AlertError} from "../dialogs/AlertError.js";
 
 function FeaturedPromotions() {
 
-    const {year, month, cust_id} = useParams();
+    const {year, month, cust_id,cust_name} = useParams();
     const [promotions, setPromotions] = useState([]);
     useEffect(() => {
         getWiTargetPro()
@@ -80,7 +80,7 @@ function FeaturedPromotions() {
             <div className="container">
                 <div className="row">
                     <div className="col-12">
-                        <ShopNameComponent name="นายเอ" code="10021512"/>
+                        <ShopNameComponent name={cust_name} code={cust_id}/>
                         <CardContentComponent CardBody={true}>
                             <div className="d-flex justify-content-between align-items-center mb-3">
                                 <h5>รายการโปรโมชั่นนำเสนอ</h5>
