@@ -19,20 +19,35 @@ function Main() {
     const [showLoading, setShowLoading] = useState(true);
 
 
-
     useEffect(() => {
         // setDateTime(formatDate(new Date()));
         let savedDateTime = localStorage.getItem('DateTime') || formatDate(new Date());
         setDateTime(savedDateTime);
         DATEPICKER(savedDateTime);
-        list();
+        list(1);
 
     }, [])
 
-    const DATEPICKER = (savedDateTime) =>{
+    const DATEPICKER = (savedDateTime) => {
+
+        const currentDate = new Date();
+        const currentYear = currentDate.getFullYear();
+        const currentMonth = currentDate.getMonth(); // เดือน 0-11
+
+        // กำหนดวันที่เริ่มต้นและสิ้นสุด
+        const minDate = new Date(currentYear, 0, 1); // 1 มกราคม ของปีนี้
+        const maxDate = new Date(currentYear, currentMonth + 1, 1); // เดือนถัดจากปัจจุบัน
+
+
         flatpickr("#myID", {
             "locale": Thai,
             defaultDate: savedDateTime,
+            enable: [
+                {
+                    from: minDate,
+                    to: maxDate
+                }
+            ],
             plugins: [
                 new monthSelectPlugin({
                     shorthand: true, //defaults to false
@@ -42,8 +57,8 @@ function Main() {
                 })
             ], onChange: (selectedDates, dateStr) => {
                 setDateTime(dateStr)
-                console.log('hello world')
                 localStorage.setItem('DateTime', dateStr);
+                onClickList(1,dateStr)
             }
         });
     }
@@ -54,17 +69,30 @@ function Main() {
         return `${month}/${year}`;
     };
 
-    const list = ()=>{
-        getMaTargetCustApi((data,status)=>{
-            if (status === 200){
-                setTargetCusts(data.TargetCust);
-                setTargetCustTotal(data.TargetCustTotal);
-                setCustAllTotal(data.CustAllTotal)
-                if (data.TargetCust.length === 0){
-                    setShowLoading(false)
-                }
-            }
+    const list = (target) => {
+        let target_month = new Date();
+        target_month = target_month.getFullYear() + '-' +
+            ('0' + (target_month.getMonth() + 1)).slice(-2) + '-' + '01'
+        getMaTargetCustApi(target, target_month, (data, status) => {
             console.log(data)
+            if (status === 200) {
+                setCustAllTotal(data.CustAllTotal)
+                setTargetCusts(data.TargetCust)
+                setTargetCustTotal(data.TargetCustTotal)
+            }
+        })
+    }
+
+    const onClickList = (target,TerMonth=DateTime) => {
+        setTargetCusts([]);
+        let [month, year] = TerMonth.split('/'); // แยกปีและเดือน
+        let target_month = `${year}-${month}-01`; // รวมปี, เดือน, และวันที่
+        console.log(target_month); // จะได้ผลลัพธ์เป็น '2024-06-01'
+        getMaTargetCustApi(target, target_month, (data, status) => {
+            console.log(data)
+            if (status == 200) {
+                setTargetCusts(data.TargetCust)
+            }
         })
     }
 
@@ -89,17 +117,22 @@ function Main() {
                 </div>
 
                 <div className={'row'}>
-                    <CardComponent title={'จำนวนร้านค้าทั้งหมด'} background={'bg-primary'} icon={'fa-shop'} val={custAllTotal}/>
-                    <CardComponent title={'จำนวนร้านค้าเป้าหมาย'} background={'bg-warning'} icon={'fa-location-dot'} val={targetCustTotal}/>
-                    <CardComponent title={'จำนวนร้านค้าออกบูท'} background={'bg-success'} icon={'fa-person-booth'} val={5}/>
-                    <CardComponent title={'จำนวนร้านค้าอบรม'} background={'bg-info'} icon={'fa-square-poll-vertical'} val={10}/>
+                    <CardComponent title={'จำนวนร้านค้าทั้งหมด'} background={'bg-primary'} icon={'fa-shop'}
+                                   val={custAllTotal} onClick={() => onClickList(0)}/>
+                    <CardComponent title={'จำนวนร้านค้าเป้าหมาย'} background={'bg-warning'} icon={'fa-location-dot'}
+                                   val={targetCustTotal} onClick={() => onClickList(1)}/>
+                    <CardComponent title={'จำนวนร้านค้าออกบูท'} background={'bg-success'} icon={'fa-person-booth'}
+                                   val={5}/>
+                    <CardComponent title={'จำนวนร้านค้าอบรม'} background={'bg-info'} icon={'fa-square-poll-vertical'}
+                                   val={10}/>
                 </div>
             </div>
             <div className={'row'}>
                 <div className={'col-md-12'}>
                     <div className={'card card-danger card-outline'}>
                         <div className={'card-body'}>
-                            <div className={'table-responsive'} style={{maxHeight: '69dvh'}}>
+                            <div className={'table-responsive'}
+                                 style={{maxHeight: '69dvh', overflowY: 'auto'}}>
                                 <table className={'table table-bordered table-striped'}>
                                     <thead className={'thead-sticky'}>
                                     <tr>
@@ -123,54 +156,63 @@ function Main() {
                                                 </td>
                                                 <td>
                                                     <div className={'d-flex justify-content-center align-items-center'}>
-                                                        <p className={'mb-0 mr-3'}>10000</p>
-                                                        <Link to={`/TargetShops/${DateTime}/${TargetCust.custid}/${TargetCust.custname}`}
-                                                              className={'btn btn-xs btn-primary'}>
-                                                            <i className="fa-solid fa-pen-to-square"></i>
-                                                        </Link>
-                                                    </div>
-                                                </td>
-                                                <td>30</td>
-                                                <td>
-                                                    <div className={'d-flex justify-content-center align-items-center'}>
-                                                        <p className={'mb-0 mr-3'}>10</p>
-                                                        <Link to={`RepeatOrders/${DateTime}/${TargetCust.custid}/${TargetCust.custname}`} className={'btn btn-xs btn-primary'}>
+                                                        <p className={'mb-0 mr-3'}>{parseFloat(TargetCust.target_sale).toLocaleString()}</p>
+                                                        <Link
+                                                            to={`/TargetShops/${DateTime}/${TargetCust.custid}/${TargetCust.custname}`}
+                                                            className={'btn btn-xs btn-primary'}>
                                                             <i className="fa-solid fa-pen-to-square"></i>
                                                         </Link>
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <div className={'d-flex justify-content-center align-items-center'}>
-                                                        <p className={'mb-0 mr-3'}>5</p>
-                                                        <Link to={`NewProducts/${DateTime}/${TargetCust.custid}/${TargetCust.custname}`}
-                                                              className={'btn btn-xs btn-primary'}>
-                                                            <i className="fa-solid fa-pen-to-square"></i>
-                                                        </Link>
-                                                    </div>
+                                                    <span>-</span>
                                                 </td>
                                                 <td>
                                                     <div className={'d-flex justify-content-center align-items-center'}>
-                                                        <p className={'mb-0 mr-3'}>2</p>
-                                                        <Link to={`/FeaturePromotion/${DateTime}/${TargetCust.custid}/${TargetCust.custname}`}
-                                                              className={'btn btn-xs btn-primary'}>
+                                                        <p className={'mb-0 mr-3'}>{parseFloat(TargetCust.sku_count).toLocaleString()}</p>
+                                                        <Link
+                                                            to={`RepeatOrders/${DateTime}/${TargetCust.custid}/${TargetCust.custname}`}
+                                                            className={'btn btn-xs btn-primary'}>
                                                             <i className="fa-solid fa-pen-to-square"></i>
                                                         </Link>
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div className={'d-flex justify-content-center align-items-center'}>
-                                                        <p className={'mb-0 mr-3'}>1</p>
-                                                        <Link to={`Booths/${DateTime}/${TargetCust.custid}/${TargetCust.custname}`}
-                                                              className={'btn btn-xs btn-primary'}>
+                                                        <p className={'mb-0 mr-3'}>{TargetCust.new_sku_count}</p>
+                                                        <Link
+                                                            to={`NewProducts/${DateTime}/${TargetCust.custid}/${TargetCust.custname}`}
+                                                            className={'btn btn-xs btn-primary'}>
                                                             <i className="fa-solid fa-pen-to-square"></i>
                                                         </Link>
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div className={'d-flex justify-content-center align-items-center'}>
-                                                        <p className={'mb-0 mr-3'}>-</p>
-                                                        <Link to={`Training/${DateTime}/${TargetCust.custid}/${TargetCust.custname}`}
-                                                              className={'btn btn-xs btn-primary'}>
+                                                        <p className={'mb-0 mr-3'}>{TargetCust.sku_pro_count}</p>
+                                                        <Link
+                                                            to={`/FeaturePromotion/${DateTime}/${TargetCust.custid}/${TargetCust.custname}`}
+                                                            className={'btn btn-xs btn-primary'}>
+                                                            <i className="fa-solid fa-pen-to-square"></i>
+                                                        </Link>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div className={'d-flex justify-content-center align-items-center'}>
+                                                        <p className={'mb-0 mr-3'}>{TargetCust.sku_booth_count}</p>
+                                                        <Link
+                                                            to={`Booths/${DateTime}/${TargetCust.custid}/${TargetCust.custname}`}
+                                                            className={'btn btn-xs btn-primary'}>
+                                                            <i className="fa-solid fa-pen-to-square"></i>
+                                                        </Link>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div className={'d-flex justify-content-center align-items-center'}>
+                                                        <p className={'mb-0 mr-3'}>{TargetCust.sku_train_count}</p>
+                                                        <Link
+                                                            to={`Training/${DateTime}/${TargetCust.custid}/${TargetCust.custname}`}
+                                                            className={'btn btn-xs btn-primary'}>
                                                             <i className="fa-solid fa-pen-to-square"></i>
                                                         </Link>
                                                     </div>

@@ -21,3 +21,13 @@ export function getCurrentSkuApi(target_month, cust_id, onPassed) {
         }
     );
 }
+
+export function CreateCurrentSkuApi(cust_id, target_month, currentSku, onPassed) {
+    axiosClient.post(`/wi_target_sku/create/${cust_id}`, {currentSku,target_month})
+        .then(({data, status}) => {
+            onPassed(data, status);
+        }).catch((error) => {
+        let Error = error.response;
+        onPassed(Error.data, Error.status);
+    })
+}

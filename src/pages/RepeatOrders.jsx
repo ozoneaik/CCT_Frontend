@@ -1,14 +1,17 @@
 import Content from "../layouts/Content.jsx";
 import ShopNameComponent from "../components/ShopNameComponent.jsx";
-import { getCurrentSkuApi, getTargetSkuApi } from "../api/wi_target_sku.js";
-import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import {CreateCurrentSkuApi, getCurrentSkuApi, getTargetSkuApi} from "../api/wi_target_sku.js";
+import {useParams} from "react-router-dom";
+import {useEffect, useState} from "react";
+import {AlertSuccess} from "../dialogs/AlertSuccess.js";
+import {AlertError} from "../dialogs/AlertError.js";
 
 function RepeatOrders() {
-    const { year, month, cust_id, cust_name } = useParams();
+    const {year, month, cust_id, cust_name} = useParams();
     const [oneAgo, setOneAgo] = useState([]);
     const [twoAgo, setTwoAgo] = useState([]);
     const [all, setAll] = useState([]);
+    const [currentSku, setCurrentSku] = useState([]);
 
     useEffect(() => {
         getWiTargetSku();
@@ -34,6 +37,7 @@ function RepeatOrders() {
         getCurrentSkuApi(target_month, cust_id, (data, status) => {
             if (status === 200) {
                 console.log(data);
+                setCurrentSku(data.TargetSkuNow)
             } else {
                 console.error("Error fetching data:", status);
             }
@@ -45,12 +49,40 @@ function RepeatOrders() {
         return sku ? sku.sku_sale : '-';
     };
 
+    const onChangeInput = (e, sku_id) => {
+        const value = e.target.value;
+        setCurrentSku(prevState => {
+            const skuExists = prevState.find(item => item.sku === sku_id);
+            if (skuExists) {
+                return prevState.map(item =>
+                    item.sku === sku_id ? {...item, target_sale: value} : item
+                );
+            } else {
+                return [...prevState, {sku: sku_id, target_sale: value}];
+            }
+        });
+    };
+
+
+    const onSave = () => {
+        const formattedSku = currentSku.map(item => ({
+            sku: item.sku,
+            target_sale: parseInt(item.target_sale)
+        }));
+        console.log(formattedSku)
+
+        CreateCurrentSkuApi(cust_id, `${year}/${month}`, formattedSku, (data, status) => {
+            status === 200 ? AlertSuccess() : AlertError();
+        });
+    };
+
+
     return (
         <Content>
             <div className={'container'}>
                 <div className={'row'}>
                     <div className={'col-12'}>
-                        <ShopNameComponent name={cust_name} code={cust_id} />
+                        <ShopNameComponent name={cust_name} code={cust_id}/>
                         <div className={'card'}>
                             <div className={'card-body'}>
                                 <div className={'d-flex justify-content-start align-items-center'}>
@@ -71,15 +103,42 @@ function RepeatOrders() {
                                         {all.length > 0 ? (
                                             all.map((sku, index) => (
                                                 <tr key={index}>
-                                                    <td className={'text-left'} style={{minWidth: 250,maxWidth: 270,textWrap: 'wrap'}} >
+                                                    <td className={'text-left'}
+                                                        style={{minWidth: 250, maxWidth: 270, textWrap: 'wrap'}}>
                                                         <p>{sku.sku_name}</p>
-                                                        <span style={{fontSize: 12,color: "gray"}}>รหัสสินค้า : {sku.sku_id}</span>
+                                                        <span style={{
+                                                            fontSize: 12,
+                                                            color: "gray"
+                                                        }}>รหัสสินค้า : {sku.sku_id}</span>
                                                     </td>
                                                     <td>{findSkuSale(sku.sku_id, twoAgo)}</td>
                                                     <td>{findSkuSale(sku.sku_id, oneAgo)}</td>
                                                     <td>
-                                                        <input style={{maxWidth: 100}} type="number" className={'form-control'} />
+                                                        {
+                                                            currentSku.length > 0 ? (
+                                                                <input
+                                                                    type="number"
+                                                                    className="form-control w-100"
+                                                                    value={
+                                                                        currentSku.find(c => c.sku === sku.sku_id)
+                                                                            ? currentSku.find(c => c.sku === sku.sku_id).target_sale
+                                                                            : 0
+                                                                    }
+                                                                    onChange={(e) => onChangeInput(e, sku.sku_id)}
+                                                                />
+                                                            ) : (
+                                                                <input
+                                                                    type="number"
+                                                                    className="form-control w-100"
+                                                                    value={0}
+                                                                    onChange={(e) => onChangeInput(e, sku.sku_id)}
+                                                                />
+                                                            )
+                                                        }
                                                     </td>
+                                                    {/*<td>*/}
+                                                    {/*    <input style={{maxWidth: 100}} type="number" className={'form-control'} />*/}
+                                                    {/*</td>*/}
                                                 </tr>
                                             ))
                                         ) : (
@@ -91,7 +150,7 @@ function RepeatOrders() {
                                     </table>
                                 </div>
                                 <div className={'d-flex justify-content-end'}>
-                                    <button className={'btn btn-primary'}>
+                                    <button className={'btn btn-primary'} onClick={onSave}>
                                         <i className="fa-solid fa-floppy-disk mr-2"></i>
                                         <span>บันทึก</span>
                                     </button>
