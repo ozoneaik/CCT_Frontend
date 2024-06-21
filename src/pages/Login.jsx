@@ -24,11 +24,10 @@ function Login() {
             <div className="login-box">
                 <div className="card card-danger card-outline">
                     <div className="card-body login-card-body">
-                        <div className={'bg-dark'}>
+                        <div className={''}>
                             <img src={LogoLogin? LogoLogin : ''} alt="" width="100%" height={'100%'}/>
                         </div>
-                        <p className="login-box-msg text-dark text-bold mt-2" style={{fontSize: 30}}>เข้าสู่ระบบ</p>
-
+                        <p className="login-box-msg text-dark text-bold mt-2" style={{fontSize: 25}}>เข้าสู่ระบบ</p>
                         <form onSubmit={onSubmit} className="mt-8 space-y-6" action="#" method="POST">
                             <div className="input-group mb-3">
                                 <input type="text" onChange={(e)=> setUsername(e.target.value)} className="form-control" placeholder="ชื่อผู้ใช้งานระบบ" name="email" />

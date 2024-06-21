@@ -6,7 +6,15 @@ export function AlertSuccess(title = 'สำเร็จ' , text) {
         title,
         text,
         confirmButtonText: 'ตกลง',
-        // showConfirmButton: false,
-        // timer: 1500
+    })
+}
+
+export function AlertSuccessTimer(title='สำเร็จ',text,timer = 1500){
+    Swal.fire({
+        icon : 'success',
+        title,
+        text,
+        showConfirmButton: false,
+        timer
     })
 }

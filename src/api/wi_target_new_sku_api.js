@@ -1,6 +1,6 @@
 import axiosClient from "../axios.js";
 
-export function getTargetNewSku(year, month, cust_id, onPassed) {
+export function getTargetNewSkuApi(year, month, cust_id, onPassed) {
     const target_month = year + '/' + month;
     axiosClient.get(`wi_target_new_sku/list_target_new_sku/${target_month}/${cust_id}`)
         .then(({data, status}) => {

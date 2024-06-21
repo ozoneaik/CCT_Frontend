@@ -6,43 +6,36 @@ import {CreateWiTargetSaleApi, ListApi, ListTargetApi, UpdateWiTargetSaleApi} fr
 import {AlertSuccess} from "../dialogs/AlertSuccess.js";
 import {AlertError} from "../dialogs/AlertError.js";
 import {AlertInfo} from "../dialogs/AlertInfo.js";
-import TableComponent from "../components/TableComponent.jsx";
 import CardContentComponent from "../components/CardContentComponent.jsx";
 import {ButtonComponent} from "../components/ButtonComponent.jsx";
+import Loading from "../components/Loading.jsx";
 
 function TargetShops() {
-    // กำหนดหัวตาราง
-    const theadTarget = ['ป-ด','ยอดขาย'];
-    const dataFieldsTarget = ['target_month', 'target_sale']; // ฟิลด์ที่ต้องการแสดงในตาราง
-    const theadHistory = ['ป-ด','จำนวนสินค้า', 'ยอดขาย'];
-    const dataFieldsHistory = ['target_month', 'product_count', 'target_sale']; // ฟิลด์ที่ต้องการแสดงในตาราง
-    //เก็บค่าเป้าหมาย
     const [target_sale, setTarget_sale] = useState(0);
-    // รายการเป้าหมาย
     const [listTarget, setListTarget] = useState([]);
     const [list, setList] = useState([]);
-    //ดึงเดือน ปี และ รหัสลุกค้า จาก uri
-    const {year, month, cust_id,cust_name} = useParams();
-
-    const [showLoading, setShowLoading] = useState(true);
+    const {year, month, cust_id, cust_name} = useParams();
+    const [loadingFirst, setLoadingFirst] = useState(true);
+    const [loadingSecond, setLoadingSecond] = useState(true);
 
     useEffect(() => {
         getWiTargetSale();
         getAllTargetSale();
     }, []);
 
-    const getWiTargetSale = ()=> {
-        ListTargetApi(year,month,cust_id,(listTarget)=>{
+    const getWiTargetSale = () => {
+        ListTargetApi(year, month, cust_id, (listTarget) => {
+            console.log('listTarget >> ', listTarget);
             setListTarget(listTarget)
-            if (!listTarget.length > 0){
-                setShowLoading(false)
-            }
+            setLoadingFirst(false)
         });
     }
 
-    const getAllTargetSale = () =>{
-        ListApi(cust_id,(list)=>{
+    const getAllTargetSale = () => {
+        ListApi(cust_id, (list) => {
+            console.log('list >> ', list)
             setList(list)
+            setLoadingSecond(false)
         })
     }
 
@@ -58,27 +51,27 @@ function TargetShops() {
                     getAllTargetSale();
                 }
             }).catch((error) => {
-                let Error = error.response;
-                if (Error.status === 422){
-                    let DataToUpdate = Error.data.wi_target_sale;
-                    DataToUpdate.target_sale = target_sale;
-                    AlertInfo('error ' + Error.status, Error.data.message,DataToUpdate,'wi_target_sale/update',
-                        (data,uri)=>{
-                            UpdateWiTargetSaleApi(data,uri).then(({data,status}) => {
-                                if (status === 200) {
-                                    AlertSuccess('สำเร็จ',data.message);
-                                    getWiTargetSale();
-                                    getAllTargetSale();
-                                }
-                            }).catch((error) => {
-                                let Error = error.response;
-                                AlertError('error ' + Error.status, Error.data.message);
-                            })
+            let Error = error.response;
+            if (Error.status === 422) {
+                let DataToUpdate = Error.data.wi_target_sale;
+                DataToUpdate.target_sale = target_sale;
+                AlertInfo('error ' + Error.status, Error.data.message, DataToUpdate, 'wi_target_sale/update',
+                    (data, uri) => {
+                        UpdateWiTargetSaleApi(data, uri).then(({data, status}) => {
+                            if (status === 200) {
+                                AlertSuccess('สำเร็จ', data.message);
+                                getWiTargetSale();
+                                getAllTargetSale();
+                            }
+                        }).catch((error) => {
+                            let Error = error.response;
+                            AlertError('error ' + Error.status, Error.data.message);
                         })
-                }else{
-                    console.log('hello')
-                    AlertError('error ' + Error.status, Error.data.message);
-                }
+                    })
+            } else {
+                console.log('hello')
+                AlertError('error ' + Error.status, Error.data.message);
+            }
         })
 
     }
@@ -94,12 +87,76 @@ function TargetShops() {
                                 <input type="number" onChange={(e) => {
                                     setTarget_sale(e.target.value)
                                 }} className={'form-control mr-3'} style={{maxWidth: 300}}/>
-                                <ButtonComponent title={'บันทึก'} onClick={()=>onClickSave()}/>
+                                <ButtonComponent title={'บันทึก'} onClick={() => onClickSave()}/>
                             </div>
-                            <TableComponent thead={theadTarget} tbody={listTarget} dataFields={dataFieldsTarget} showLoading={showLoading}/>
+                            <div className={'table-responsive'}>
+                                <table className={'table table-bordered'}>
+                                    <thead>
+                                    <tr>
+                                        <th>ปี - เดือน</th>
+                                        <th>ยอดขาย</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {
+                                        loadingFirst ? (
+                                            <tr>
+                                                <td colSpan={2}><Loading/></td>
+                                            </tr>
+                                        ) : (
+                                            listTarget.length > 0 ? (
+                                                listTarget.map((item) => (
+                                                    <tr key={item.id}>
+                                                        <td>{item.target_month}</td>
+                                                        <td>{item.target_sale}</td>
+                                                    </tr>
+                                                ))
+                                            ) : (
+                                                <tr>
+                                                    <td colSpan={2}>ไม่มีข้อมูล</td>
+                                                </tr>
+                                            )
+                                        )
+                                    }
+                                    </tbody>
+                                </table>
+                            </div>
                         </CardContentComponent>
                         <CardContentComponent CardHeader={true} CardBody={true} HeaderTitle={'ประวัติ'}>
-                            <TableComponent thead={theadHistory} tbody={list} dataFields={dataFieldsHistory} showLoading={showLoading}/>
+                            <div className={'table-responsive'}>
+                                <table className={'table table-bordered'}>
+                                    <thead>
+                                    <tr>
+                                        <th>ปี - เดือน</th>
+                                        <th>จำนวนสินค้า</th>
+                                        <th>ยอดขาย</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {
+                                        loadingSecond ? (
+                                            <tr>
+                                                <td colSpan={3}><Loading/></td>
+                                            </tr>
+                                        ) : (
+                                            list.length > 0 ? (
+                                                list.map((item) => (
+                                                    <tr key={item.id}>
+                                                        <td>{item.target_month}</td>
+                                                        <td>-</td>
+                                                        <td>{item.target_sale}</td>
+                                                    </tr>
+                                                ))
+                                            ) : (
+                                                <tr>
+                                                    <td colSpan={3}>ไม่มีข้อมูล</td>
+                                                </tr>
+                                            )
+                                        )
+                                    }
+                                    </tbody>
+                                </table>
+                            </div>
                         </CardContentComponent>
                     </div>
                 </div>

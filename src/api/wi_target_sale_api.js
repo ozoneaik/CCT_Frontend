@@ -3,7 +3,6 @@ import axiosClient from "../axios.js";
 export function ListApi(cust_id, onPassed) {
     axiosClient.get(`/wi_target_sale/list/${cust_id}`)
         .then(({data, status}) => {
-            console.log('list >> ',data.list)
             if (status === 200) {
                 onPassed(data.list)
             }
@@ -17,7 +16,6 @@ export function ListApi(cust_id, onPassed) {
 export function ListTargetApi(year, month, cust_id, onPassed) {
     axiosClient.get(`wi_target_sale/list-target/${year}/${month}/${cust_id}`)
         .then(({data, status}) => {
-            console.log('listTarget >> ',data.listTarget)
             if (status === 200) {
                 onPassed(data.listTarget,status)
             }

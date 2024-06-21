@@ -4,23 +4,23 @@ import {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import {CreateTargetProApi, getSkuNameApi, ListTargetProApi} from "../api/wi_target_pro_api.js";
 import {ButtonComponent} from "../components/ButtonComponent.jsx";
-import login from "./Login.jsx";
 import CardContentComponent from "../components/CardContentComponent.jsx";
 import {AlertSuccess} from "../dialogs/AlertSuccess.js";
 import {AlertError} from "../dialogs/AlertError.js";
+import Loading from "../components/Loading.jsx";
 
 function FeaturedPromotions() {
-
     const {year, month, cust_id,cust_name} = useParams();
     const [promotions, setPromotions] = useState([]);
+    const [loading, setLoading] = useState(true);
     useEffect(() => {
         getWiTargetPro()
     }, []);
 
     const getWiTargetPro = () => {
-        ListTargetProApi(year, month, cust_id, (data) => {
-
-            setPromotions(data.listTargetPro);
+        ListTargetProApi(year, month, cust_id, (data,status) => {
+            setPromotions(status === 200 ? data.listTargetPro : []);
+            setLoading(false);
         })
     }
 
@@ -57,10 +57,6 @@ function FeaturedPromotions() {
         const newPromotion = promotions.filter((_, i) => i !== index);
         setPromotions(newPromotion);
     };
-
-    const D = () => {
-        console.log(promotions)
-    }
 
     const onSave = () => {
         CreateTargetProApi(promotions,(data,status)=>{
@@ -100,48 +96,47 @@ function FeaturedPromotions() {
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {promotions.length > 0 ? (
-                                        promotions.map((promotion, index) => (
-                                            <tr key={index}>
-                                                <td>
-                                                    <input
-                                                        type="text"
-                                                        className="form-control"
-                                                        name="pro_sku"
-                                                        value={promotion.pro_sku}
-                                                        onChange={(e) => handleInputChangeProSku(index, e)}
-                                                    />
-                                                </td>
-                                                <td>
-                                                        <span>
-                                                            {promotion.pro_name ? promotion.pro_name : 'กรอกรหัสสินค้าที่ถูกต้อง'}
-                                                        </span>
-                                                </td>
-                                                <td>
-                                                        <textarea name="pro_desc" className={'form-control'} cols="30"
-                                                                  rows="3"
-                                                                  value={promotion.pro_desc}
-                                                                  onChange={(e) => handleInputChange(index, e)}>
-                                                        </textarea>
-                                                </td>
-                                                <td>
-                                                    <button
-                                                        type="button"
-                                                        className="btn btn-sm btn-danger"
-                                                        onClick={() => removeProductRow(index)}
-                                                    >
-                                                        <i className="fa-solid fa-trash"></i>
-                                                    </button>
-                                                </td>
+                                    {
+                                        loading ? (
+                                            <tr>
+                                                <td colSpan={4}><Loading/></td>
                                             </tr>
-                                        ))
-                                    ) : (
-                                        <tr>
-                                            <td colSpan="4" className="text-center">
-                                                <span>ไม่มีข้อมูล</span>
-                                            </td>
-                                        </tr>
-                                    )}
+                                        ): (
+                                            promotions.length > 0 ? (
+                                                promotions.map((promotion, index) => (
+                                                    <tr key={index}>
+                                                        <td>
+                                                            <input type="text" className="form-control"
+                                                                   name="pro_sku" value={promotion.pro_sku}
+                                                                   onChange={(e) => handleInputChangeProSku(index, e)}
+                                                            />
+                                                        </td>
+                                                        <td>
+                                                            <span>{promotion.pro_name ? promotion.pro_name : 'กรอกรหัสสินค้าที่ถูกต้อง'}</span>
+                                                        </td>
+                                                        <td>
+                                                    <textarea name="pro_desc" className={'form-control'} cols="30"
+                                                              rows="3"
+                                                              value={promotion.pro_desc}
+                                                              onChange={(e) => handleInputChange(index, e)}>
+                                                    </textarea>
+                                                        </td>
+                                                        <td>
+                                                            <ButtonComponent onClick={() => removeProductRow(index)}
+                                                                             Icon={'fa-trash'} BtnStyle={'btn-danger btn-sm'}
+                                                            />
+                                                        </td>
+                                                    </tr>
+                                                ))
+                                            ) : (
+                                                <tr>
+                                                    <td colSpan="4" className="text-center">
+                                                        <span>ไม่มีข้อมูล</span>
+                                                    </td>
+                                                </tr>
+                                            )
+                                        )
+                                    }
                                     </tbody>
                                 </table>
                             </div>

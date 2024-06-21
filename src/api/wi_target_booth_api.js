@@ -2,13 +2,11 @@ import axiosClient from "../axios.js";
 
 export function getTargetBoothApi(year, month, cust_id, onPassed) {
     axiosClient.get(`/wi_target_booth/list_target_booth/${year}/${month}/${cust_id}`)
-        .then(res => {
-            if (res.status === 200) {
-                onPassed(res.data);
-            }
+        .then(({data,status}) => {
+            onPassed(data,status);
         }).catch((error) => {
             let Error = error.response;
-            onPassed(Error.data)
+            onPassed(Error.data,Error.status);
         }
     );
 }
@@ -16,9 +14,7 @@ export function getTargetBoothApi(year, month, cust_id, onPassed) {
 export function CreateTargetBoothApi(startdate, enddate, booth_month, custid, onPassed) {
     axiosClient.post(`wi_target_booth/create`, {startdate, enddate, booth_month, custid})
         .then(({data, status}) => {
-            if (status === 200) {
-                onPassed(data, status)
-            }
+            onPassed(data, status)
         }).then((error) => {
             let Error = error.response;
             onPassed(Error.data, Error.status)

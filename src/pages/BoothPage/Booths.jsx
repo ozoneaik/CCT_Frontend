@@ -13,11 +13,13 @@ import {AlertSuccess} from "../../dialogs/AlertSuccess.js";
 import {AlertError} from "../../dialogs/AlertError.js";
 import {AlertQuestion} from "../../dialogs/AlertInfo.js";
 import ModalBoothSku from "./ModalBoothSku.jsx";
+import Loading from "../../components/Loading.jsx";
 
 function Booths() {
     const {year, month, cust_id,cust_name} = useParams();
     const minDate = `${year}-${month}-01`;
     const maxDate = `${year}-${month}-31`;
+    const [loading, setLoading] = useState(true);
 
     const [booths, setBooths] = useState([]);
     const [DateTime, setDateTime] = useState();
@@ -32,7 +34,6 @@ function Booths() {
             "locale": Thai,
             minDate: minDate,
             maxDate : maxDate,
-            // defaultDate: [`${year}-${month}-1`, `${year}-${month}-5`],
             mode: 'range',
             plugins: [],
             onChange: (selectedDates, dateStr) => {
@@ -42,9 +43,10 @@ function Booths() {
     };
 
     const getWiTargetBooth = () => {
-        getTargetBoothApi(year, month, cust_id, (data) => {
+        getTargetBoothApi(year, month, cust_id, (data,status) => {
             console.log(data.listTargetBooths);
-            setBooths(data.listTargetBooths);
+            setBooths(status === 200 ? data.listTargetBooths : []);
+            setLoading(false);
         });
     };
 
@@ -52,12 +54,7 @@ function Booths() {
         const [startdate, enddate] = DateTime.split(' ถึง ');
         const target_month = year + '/' + month;
         CreateTargetBoothApi(startdate, enddate, target_month, cust_id, (data, status) => {
-            if (status === 200) {
-                AlertSuccess('สำเร็จ', data.message)
-                getWiTargetBooth();
-            } else {
-                AlertError('เกิดข้อผิดพลาด', data.message)
-            }
+            status === 200 ? AlertSuccess('สำเร็จ',data.message) : AlertError(data.message)
         })
     }
 
@@ -65,16 +62,11 @@ function Booths() {
         AlertQuestion('แน่ใจหรือไม่', '', (confirm) => {
             if (confirm) {
                 DeleteTargetBoothApi(id, (data, status) => {
-                    if (status === 200) {
-                        AlertSuccess(data.message)
-                    } else {
-                        AlertError(data.message)
-                    }
+                    status === 200 ? AlertSuccess(data.message) : AlertError(data.message)
                     getWiTargetBooth();
                 })
             }
         })
-
     }
 
     const updateBoothSkuData = (check) => {
@@ -94,10 +86,9 @@ function Booths() {
                                 <h5>ระยะเวลาออกบูธ</h5>
                                 <div className={'d-flex w-100'} style={{maxWidth: 500}}>
                                     <input type="date" id={'DateRange'} className={'form-control mr-3 bg-light'}/>
-                                    <button onClick={saveBooth} className={'btn btn-primary w-25'}>
-                                        <i className="fa-solid fa-floppy-disk mr-2"></i>
-                                        <span>บันทึก</span>
-                                    </button>
+                                    <div className={'w-25'}>
+                                        <ButtonComponent BtnStyle={'w-100 btn-primary'} onClick={saveBooth} title={'บันทึก'}/>
+                                    </div>
                                 </div>
                             </div>
                             <div className={'table-responsive'}>
@@ -111,32 +102,38 @@ function Booths() {
                                     </thead>
                                     <tbody>
                                     {
-                                        booths.length > 0 ? (
-                                            booths.map((booth, index) => (
-                                                <tr key={booth.id}>
-                                                    <td>{booth.startdate} ถึง {booth.enddate}</td>
-                                                    <td>{booth.total_skuqty}</td>
-                                                    <td>
-                                                        <button type="button" className="btn btn-sm btn-warning"
-                                                                data-toggle="modal"
-                                                                data-target={`#exampleModal${index}`}>
-                                                            <i className="fa-solid fa-edit"></i>
-                                                        </button>
-                                                        &nbsp;
-                                                        <ButtonComponent onClick={() => Delete(booth.id)}
-                                                                         Icon={'fa-trash'}
-                                                                         BtnStyle={'btn-sm bg-danger'}/>
-                                                        <ModalBoothSku index={index} booth_sku={booth.get_booth_sku}
-                                                                       title={`${booth.startdate} ถึง ${booth.enddate}`}
-                                                                       booth_id={booth.id}
-                                                        onPassed={(check)=>updateBoothSkuData(check)}/>
-                                                    </td>
-                                                </tr>
-                                            ))
-                                        ) : (
+                                        loading ? (
                                             <tr>
-                                                <td colSpan="3">ไม่มีข้อมูล</td>
+                                                <td colSpan={3}><Loading/></td>
                                             </tr>
+                                        ) : (
+                                            booths.length > 0 ? (
+                                                booths.map((booth, index) => (
+                                                    <tr key={booth.id}>
+                                                        <td>{booth.startdate} ถึง {booth.enddate}</td>
+                                                        <td>{booth.total_skuqty}</td>
+                                                        <td>
+                                                            <button type="button" className="btn btn-sm btn-warning"
+                                                                    data-toggle="modal"
+                                                                    data-target={`#exampleModal${index}`}>
+                                                                <i className="fa-solid fa-edit"></i>
+                                                            </button>
+                                                            &nbsp;
+                                                            <ButtonComponent onClick={() => Delete(booth.id)}
+                                                                             Icon={'fa-trash'}
+                                                                             BtnStyle={'btn-sm bg-danger'}/>
+                                                            <ModalBoothSku index={index} booth_sku={booth.get_booth_sku}
+                                                                           title={`${booth.startdate} ถึง ${booth.enddate}`}
+                                                                           booth_id={booth.id}
+                                                                           onPassed={(check)=>updateBoothSkuData(check)}/>
+                                                        </td>
+                                                    </tr>
+                                                ))
+                                            ) : (
+                                                <tr>
+                                                    <td colSpan="3">ไม่มีข้อมูล</td>
+                                                </tr>
+                                            )
                                         )
                                     }
                                     </tbody>

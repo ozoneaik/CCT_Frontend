@@ -17,6 +17,7 @@ import {ButtonComponent} from "../components/ButtonComponent.jsx";
 import {AlertSuccess} from "../dialogs/AlertSuccess.js";
 import {AlertError} from "../dialogs/AlertError.js";
 import {AlertQuestion} from "../dialogs/AlertInfo.js";
+import Loading from "../components/Loading.jsx";
 
 
 function Training() {
@@ -26,6 +27,7 @@ function Training() {
     const {year, month, cust_id,cust_name} = useParams();
     const minDate = `${year}-${month}-01`;
     const maxDate = `${year}-${month}-31`;
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         DATERANGE();
@@ -48,12 +50,8 @@ function Training() {
     const getTargetTrain = () => {
         const target_month = year + '/' + month;
         getTargetTrainApi(target_month, cust_id, (data, status) => {
-            if (status === 200) {
-                setTrains(data.TargetTrains)
-                console.log(data)
-            } else {
-                setTrains([])
-            }
+            setTrains(status === 200 ? data.TargetTrains : []);
+            setLoading(false);
         })
     }
 
@@ -122,33 +120,39 @@ function Training() {
                                         <tbody>
 
                                         {
-                                            trains.length > 0 ? (
-                                                trains.map((train, index) => (
-                                                    <tr key={index}>
-                                                        <td>{train.trainstart} ถึง {train.trainend}</td>
-                                                        <td>
+                                            loading ? (
+                                                <tr>
+                                                    <td colSpan={3}><Loading/></td>
+                                                </tr>
+                                            ) : (
+                                                trains.length > 0 ? (
+                                                    trains.map((train, index) => (
+                                                        <tr key={index}>
+                                                            <td>{train.trainstart} ถึง {train.trainend}</td>
+                                                            <td>
                                                             <textarea name="" id="" cols="30" rows="2"
                                                                       className={'form-control'}
                                                                       defaultValue={train.train_desc}
                                                                       onChange={(e) => onChangeDesc(index, e.target.value)}>
 
                                                             </textarea>
-                                                        </td>
-                                                        <td>
-                                                            <ButtonComponent Icon={'fa-floppy-disk'}
-                                                                             BtnStyle={'btn-sm btn-primary'}
-                                                                             onClick={() => onUpdate(train.id, train.train_desc)}/>
-                                                            &nbsp;
-                                                            <ButtonComponent Icon={'fa-trash'}
-                                                                             BtnStyle={'btn-danger btn-sm'}
-                                                                             onClick={() => onDelete(train.id)}/>
-                                                        </td>
+                                                            </td>
+                                                            <td>
+                                                                <ButtonComponent Icon={'fa-floppy-disk'}
+                                                                                 BtnStyle={'btn-sm btn-primary'}
+                                                                                 onClick={() => onUpdate(train.id, train.train_desc)}/>
+                                                                &nbsp;
+                                                                <ButtonComponent Icon={'fa-trash'}
+                                                                                 BtnStyle={'btn-danger btn-sm'}
+                                                                                 onClick={() => onDelete(train.id)}/>
+                                                            </td>
+                                                        </tr>
+                                                    ))
+                                                ) : (
+                                                    <tr>
+                                                        <td colSpan={3}>ไม่มีข้อมูล</td>
                                                     </tr>
-                                                ))
-                                            ) : (
-                                                <tr>
-                                                    <td colSpan={3}>ไม่มีข้อมูล</td>
-                                                </tr>
+                                                )
                                             )
                                         }
                                         </tbody>
