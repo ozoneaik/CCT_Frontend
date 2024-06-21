@@ -22,8 +22,8 @@ export function getSkuNameApi(pro_sku,onPassed){
     })
 }
 
-export function CreateTargetProApi(promotions,onPassed){
-    axiosClient.post(`/wi_target_pro/create`,promotions)
+export function CreateTargetProApi(promotions,year,month,onPassed){
+    axiosClient.post(`/wi_target_pro/create/${year}/${month}`,promotions)
         .then(({data, status}) => {
             if (status === 200) {
                 onPassed(data,status);

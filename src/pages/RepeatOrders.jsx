@@ -76,7 +76,7 @@ function RepeatOrders() {
         console.log(formattedSku)
 
         CreateCurrentSkuApi(cust_id, `${year}/${month}`, formattedSku, (data, status) => {
-            status === 200 ? AlertSuccess() : AlertError();
+            status === 200 ? AlertSuccess('สำเร็จ',data.message) : AlertError('เกิดข้อผิดพลาด',data.message);
         });
     };
 

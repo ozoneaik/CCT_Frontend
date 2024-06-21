@@ -64,7 +64,7 @@ function NewProducts() {
 
 
     const onSave = ()=>{
-        CreateTargetNewSkuApi(skus,(data,status)=>{
+        CreateTargetNewSkuApi(skus,year,month,(data,status)=>{
             status === 200 ? AlertSuccess(data.message) : AlertError(data.message,data.subMessage);
             getTargetNewSkus();
         });
@@ -72,7 +72,6 @@ function NewProducts() {
     return (
         <Content>
             <div className={'container'}>
-                <span>hello target is {loading ? '1' : '0'}</span>
                 <ShopNameComponent name={cust_name} code={cust_id}/>
                 <div className={'row'}>
                     <div className={'col-12'}>

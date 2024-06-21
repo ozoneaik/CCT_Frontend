@@ -12,8 +12,8 @@ export function getTargetNewSkuApi(year, month, cust_id, onPassed) {
     );
 }
 
-export function CreateTargetNewSkuApi(skus,onPassed){
-    axiosClient.post(`wi_target_new_sku/create`, {skus})
+export function CreateTargetNewSkuApi(skus,year,month,onPassed){
+    axiosClient.post(`wi_target_new_sku/create/${year}/${month}`, {skus})
         .then(({data, status}) => {
             onPassed(data, status);
         }).catch((error) => {

@@ -59,13 +59,13 @@ function FeaturedPromotions() {
     };
 
     const onSave = () => {
-        CreateTargetProApi(promotions,(data,status)=>{
+        CreateTargetProApi(promotions,year,month,(data,status)=>{
             if (status === 200){
                 console.log(data.promotions,data.message);
                 setPromotions(data.promotions)
-                AlertSuccess();
+                AlertSuccess('สำเร็จ',data.message);
             }else{
-                AlertError('',data.message);
+                AlertError('เกิดข้อผิดพลาด',data.message);
             }
         });
     }

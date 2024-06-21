@@ -54,15 +54,16 @@ function Booths() {
         const [startdate, enddate] = DateTime.split(' ถึง ');
         const target_month = year + '/' + month;
         CreateTargetBoothApi(startdate, enddate, target_month, cust_id, (data, status) => {
-            status === 200 ? AlertSuccess('สำเร็จ',data.message) : AlertError(data.message)
+            status === 200 ? AlertSuccess('สำเร็จ',data.message) : AlertError('เกิดข้อผิดพลาด',data.message)
+            getWiTargetBooth();
         })
     }
 
-    const Delete = (id) => {
+    const Delete = (id,target_month) => {
         AlertQuestion('แน่ใจหรือไม่', '', (confirm) => {
             if (confirm) {
-                DeleteTargetBoothApi(id, (data, status) => {
-                    status === 200 ? AlertSuccess(data.message) : AlertError(data.message)
+                DeleteTargetBoothApi(id,target_month, (data, status) => {
+                    status === 200 ? AlertSuccess(data.message) : AlertError('เกิดข้อผิดพลาด',data.message)
                     getWiTargetBooth();
                 })
             }
@@ -119,7 +120,7 @@ function Booths() {
                                                                 <i className="fa-solid fa-edit"></i>
                                                             </button>
                                                             &nbsp;
-                                                            <ButtonComponent onClick={() => Delete(booth.id)}
+                                                            <ButtonComponent onClick={() => Delete(booth.id,`${year}/${month}`)}
                                                                              Icon={'fa-trash'}
                                                                              BtnStyle={'btn-sm bg-danger'}/>
                                                             <ModalBoothSku index={index} booth_sku={booth.get_booth_sku}

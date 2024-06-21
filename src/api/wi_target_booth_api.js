@@ -15,15 +15,15 @@ export function CreateTargetBoothApi(startdate, enddate, booth_month, custid, on
     axiosClient.post(`wi_target_booth/create`, {startdate, enddate, booth_month, custid})
         .then(({data, status}) => {
             onPassed(data, status)
-        }).then((error) => {
+        }).catch((error) => {
             let Error = error.response;
             onPassed(Error.data, Error.status)
         }
     );
 }
 
-export function DeleteTargetBoothApi(id, onPassed) {
-    axiosClient.delete(`wi_target_booth/delete/${id}`)
+export function DeleteTargetBoothApi(id,target_month, onPassed) {
+    axiosClient.delete(`wi_target_booth/delete/${id}/${target_month}`)
         .then(({data, status}) => {
             onPassed(data, status);
         }).catch((error) => {

@@ -1,7 +1,6 @@
 import ShopNameComponent from "../components/ShopNameComponent.jsx";
 import Content from "../layouts/Content.jsx";
 import {useEffect, useState} from "react";
-
 import flatpickr from "flatpickr";
 import "flatpickr/dist/plugins/monthSelect/style.css";
 import "flatpickr/dist/flatpickr.min.css";
@@ -19,9 +18,7 @@ import {AlertError} from "../dialogs/AlertError.js";
 import {AlertQuestion} from "../dialogs/AlertInfo.js";
 import Loading from "../components/Loading.jsx";
 
-
 function Training() {
-
     const [trains, setTrains] = useState([]);
     const [DateTime, setDateTime] = useState("");
     const {year, month, cust_id,cust_name} = useParams();
@@ -55,11 +52,11 @@ function Training() {
         })
     }
 
-    const onDelete = (id) => {
+    const onDelete = (id,year,month) => {
         AlertQuestion('ต้องการลบ', 'คุณแน่ใจหรือไม่', (Bool) => {
             if (Bool) {
-                DeleteTargetTrainApi(id, (data, status) => {
-                    status === 200 ? AlertSuccess(data.message) : AlertError(data.message)
+                DeleteTargetTrainApi(id,year,month, (data, status) => {
+                    status === 200 ? AlertSuccess(data.message) : AlertError('เกิดข้อผิดพลาด',data.message)
                     getTargetTrain();
                 })
             }
@@ -74,10 +71,10 @@ function Training() {
         });
     }
 
-    const onUpdate = (id, desc) => {
+    const onUpdate = (id, desc,year,month) => {
         console.log(id,desc)
-        UpdateTargetTrainDescApi(id,desc,(data,status)=>{
-            status === 200 ? AlertSuccess(data.message) : AlertError(data.message)
+        UpdateTargetTrainDescApi(id,desc,year,month,(data,status)=>{
+            status === 200 ? AlertSuccess(data.message) : AlertError('เกิดข้อผิดพลาด',data.message)
             getTargetTrain();
         });
     }
@@ -139,12 +136,12 @@ function Training() {
                                                             </td>
                                                             <td>
                                                                 <ButtonComponent Icon={'fa-floppy-disk'}
-                                                                                 BtnStyle={'btn-sm btn-primary'}
-                                                                                 onClick={() => onUpdate(train.id, train.train_desc)}/>
+                                                                                 BtnStyle={'btn-xs btn-primary'}
+                                                                                 onClick={() => onUpdate(train.id, train.train_desc,year,month)}/>
                                                                 &nbsp;
                                                                 <ButtonComponent Icon={'fa-trash'}
-                                                                                 BtnStyle={'btn-danger btn-sm'}
-                                                                                 onClick={() => onDelete(train.id)}/>
+                                                                                 BtnStyle={'btn-danger btn-xs'}
+                                                                                 onClick={() => onDelete(train.id,year,month)}/>
                                                             </td>
                                                         </tr>
                                                     ))

@@ -28,8 +28,8 @@ export function CreateTargetTrainApi(target_month, cust_id, trainstart, trainend
     );
 }
 
-export function UpdateTargetTrainDescApi(id,desc, onPassed) {
-    axiosClient.put(`wi_target_train/update/${id}`,{
+export function UpdateTargetTrainDescApi(id,desc, year,month,onPassed) {
+    axiosClient.put(`wi_target_train/update/${id}/${year}/${month}`,{
         desc
     })
         .then(({data, status}) => {
@@ -41,8 +41,8 @@ export function UpdateTargetTrainDescApi(id,desc, onPassed) {
     );
 }
 
-export function DeleteTargetTrainApi(id, onPassed) {
-    axiosClient.delete(`wi_target_train/delete/${id}`)
+export function DeleteTargetTrainApi(id,year,month ,onPassed) {
+    axiosClient.delete(`wi_target_train/delete/${id}/${year}/${month}`)
         .then(({data, status}) => {
             onPassed(data, status);
         }).catch((error) => {
