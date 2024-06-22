@@ -4,9 +4,6 @@ import './assets/styles/fonts.css'
 import {RouterProvider} from "react-router-dom";
 import {router} from "./routes.jsx";
 import {ContextProvider} from "./contexts/ContextProvider.jsx";
-import '../src/assets/plugins/adminlte/css/adminlte.min.css'
-import '../src/assets/plugins/adminlte/js/adminlte.min.js'
-import '@fortawesome/fontawesome-free/css/all.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.js'
 
 const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {};
