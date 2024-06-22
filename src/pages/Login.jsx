@@ -13,6 +13,7 @@ function Login() {
     const onSubmit = (ev) => {
         ev.preventDefault();
         LoginApi(username,password,(user,token) => {
+            console.log(user,token);
             setCurrentUser(user);
             setUserToken(token);
             navigate('/')
