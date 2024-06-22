@@ -7,17 +7,16 @@
 #app .user-list{
     margin-top: 20px;
     display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
+    grid-template-columns: repeat(auto-fit,minmax(200px,300px));
     grid-gap: 30px;
 }
 
 #app .user-list .card{
     margin: 0;
-    transition: all 0.3s;
 }
 
 #app .user-list .card:hover{
-    background-color: #fe5000;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 
 #app p {
@@ -36,7 +35,17 @@
     overflow: hidden;
 }
 
-.BTN{
-    background: none;
+#app .BTN{
+    background: #ececec;
+    border: none;
+    border-radius: 10px;
+    height: 40px;
+    color : #3a3a3a;
+    font-weight: bold;
+}
+
+#app .BTN:hover{
+    background: #fc5333;
+    color : #fff;
 }
 

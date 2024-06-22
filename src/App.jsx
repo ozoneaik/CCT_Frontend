@@ -2,11 +2,16 @@ import './App.css'
 import {useEffect, useState} from "react";
 import {userListApi} from "./api/user_api.js";
 import Loading from "./components/Loading.jsx";
+import axiosClient from "./axios.js";
+import {useStateContext} from "./contexts/ContextProvider.jsx";
+import {useNavigate} from "react-router-dom";
 
 function App() {
 
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
+    const {setCurrentUser, setUserToken} = useStateContext();
+    const navigate = useNavigate();
     useEffect(() => {
         getUserList();
     }, []);
@@ -18,6 +23,20 @@ function App() {
         })
     }
 
+    const logout = (ev) => {
+        localStorage.removeItem('DateTime');
+        ev.preventDefault();
+        axiosClient.post("/logout").then((res) => {
+            console.log('res => ', res.status)
+            if (res.data.success){
+                navigate('/login')
+            }
+            setCurrentUser({});
+            setUserToken(null);
+
+        });
+    };
+
     return (
         <div id={'app'}>
             <div className={'d-flex justify-content-between'}>
@@ -25,7 +44,7 @@ function App() {
                     <p>รายชื่อผู้ใช้งาน</p>
                 </div>
                 <div className={'right'}>
-                    <button className={'btn btn-danger'}>ออกจากรับบ</button>
+                    <button onClick={(e) => logout(e)} className={'btn btn-danger'}>ออกจากรับบ</button>
                 </div>
             </div>
             <div className={'user-list'}>
@@ -47,8 +66,8 @@ function App() {
                                             <h6>{user.name}</h6>
                                             <p>รหัส {user.username}</p>
                                         </div>
-                                        <div className={'d-flex justify-content-center'}>
-                                            <button className={'w-100 BTN'}>View Profile</button>
+                                        <div className={'d-flex justify-content-center mt-2'}>
+                                            <button className={'w-100 BTN'}>รายละเอียด</button>
                                         </div>
                                     </div>
                                 </div>
