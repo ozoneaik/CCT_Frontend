@@ -8,6 +8,7 @@ import Booths from "./pages/BoothPage/Booths.jsx";
 import NewProducts from "./pages/NewProducts.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import Login from "./pages/Login.jsx";
+import App from "./App.jsx";
 
 export const router = createBrowserRouter([
     {path: '/', element: <Main/>},
@@ -18,6 +19,7 @@ export const router = createBrowserRouter([
     {path: '/Training/:month/:year/:cust_id/:cust_name', element: <Training/>}, // ระยะเวลาอบรม
     {path: '/Booths/:month/:year/:cust_id/:cust_name', element: <Booths/>}, // ระยะเวลาออกบูธ
     {path: '/NewProducts/:month/:year/:cust_id/:cust_name', element: <NewProducts/>}, // รายการสินค้านำเสนอใหม่
+    {path : '/manage-user',element: <App/>},
     {path: '/login', element: <Login/>},
     {path: '*',element : <NotFound/>}
 ])

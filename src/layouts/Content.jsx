@@ -9,6 +9,8 @@ function Content({children}) {
     const {currentUser,userToken,setCurrentUser} = useStateContext();
     if (!userToken){
         return <Navigate to="/login" />;
+    }else if(currentUser.username === 'admin'){
+        return <Navigate to={'/manage-user'}/>
     }
     // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {

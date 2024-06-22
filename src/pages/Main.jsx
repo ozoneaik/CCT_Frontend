@@ -58,6 +58,7 @@ function Main() {
     };
 
     const onClickList = (target, TarMonth = DateTime) => {
+        setShowLoading(true);
         setTargetCusts([]);
         let [month, year] = TarMonth.split('/');
         month = parseInt(month, 10);
@@ -83,10 +84,13 @@ function Main() {
                 }
                 setTargetCusts(data.TargetCust)
             }
+            setShowLoading(false);
         });
+
     }
 
     const onClickBooth = (target, TerMonth = DateTime) => {
+        setShowLoading(true);
         setTargetCusts([]);
         let [month, year] = TerMonth.split('/');
         month = parseInt(month, 10);
@@ -105,11 +109,13 @@ function Main() {
             if (status === 200) {
                 setTargetCusts(data.TargetCust)
             }
+            setShowLoading(false);
         });
     }
 
     const onClickTrain = (target, TerMonth = DateTime) => {
         setTargetCusts([]);
+        setShowLoading(true);
         let [month, year] = TerMonth.split('/');
         month = parseInt(month, 10);
         year = parseInt(year, 10);
@@ -127,6 +133,7 @@ function Main() {
             if (status === 200) {
                 setTargetCusts(data.TargetCust)
             }
+            setShowLoading(false);
         });
     }
 
@@ -187,79 +194,81 @@ function Main() {
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {targetCusts.length > 0 ? (
-                                        targetCusts.map((TargetCust, index) => (
-                                            <tr key={index}>
-                                                <td className={'text-left D'}>
-                                                    <p className={'mb-0'}>{TargetCust.custid}</p>
-                                                    <p className={'mb-0'}>{TargetCust.custname}</p>
-                                                </td>
-                                                <td>
-                                                    <div className={'d-flex justify-content-center align-items-center'}>
-                                                        <p className={'mb-0 mr-3'}>{parseFloat(TargetCust.target_sale).toLocaleString()}</p>
-                                                        <Link to={`/TargetShops/${DateTime}/${TargetCust.custid}/${TargetCust.custname}`} className={'btn btn-xs btn-primary'}>
-                                                            <i className="fa-solid fa-pen-to-square"></i>
-                                                        </Link>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <span>-</span>
-                                                </td>
-                                                <td>
-                                                    <div className={'d-flex justify-content-center align-items-center'}>
-                                                        <p className={'mb-0 mr-3'}>{parseFloat(TargetCust.sku_count).toLocaleString()}</p>
-                                                        <Link to={`RepeatOrders/${DateTime}/${TargetCust.custid}/${TargetCust.custname}`} className={'btn btn-xs btn-primary'}>
-                                                            <i className="fa-solid fa-pen-to-square"></i>
-                                                        </Link>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div className={'d-flex justify-content-center align-items-center'}>
-                                                        <p className={'mb-0 mr-3'}>{TargetCust.new_sku_count}</p>
-                                                        <Link to={`NewProducts/${DateTime}/${TargetCust.custid}/${TargetCust.custname}`} className={'btn btn-xs btn-primary'}>
-                                                            <i className="fa-solid fa-pen-to-square"></i>
-                                                        </Link>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div className={'d-flex justify-content-center align-items-center'}>
-                                                        <p className={'mb-0 mr-3'}>{TargetCust.sku_pro_count}</p>
-                                                        <Link to={`/FeaturePromotion/${DateTime}/${TargetCust.custid}/${TargetCust.custname}`} className={'btn btn-xs btn-primary'}>
-                                                            <i className="fa-solid fa-pen-to-square"></i>
-                                                        </Link>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div className={'d-flex justify-content-center align-items-center'}>
-                                                        <p className={'mb-0 mr-3'}>{TargetCust.sku_booth_count}</p>
-                                                        <Link to={`Booths/${DateTime}/${TargetCust.custid}/${TargetCust.custname}`} className={'btn btn-xs btn-primary'}>
-                                                            <i className="fa-solid fa-pen-to-square"></i>
-                                                        </Link>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div className={'d-flex justify-content-center align-items-center'}>
-                                                        <p className={'mb-0 mr-3'}>{TargetCust.sku_train_count}</p>
-                                                        <Link to={`Training/${DateTime}/${TargetCust.custid}/${TargetCust.custname}`} className={'btn btn-xs btn-primary'}>
-                                                            <i className="fa-solid fa-pen-to-square"></i>
-                                                        </Link>
-                                                    </div>
+                                    {
+                                        showLoading ? (
+                                            <tr>
+                                                <td colSpan={10}>
+                                                    <Loading/>
                                                 </td>
                                             </tr>
-                                        ))
-                                    ) : (
-                                        <tr>
-                                            <td colSpan={10}>
-                                                {
-                                                    showLoading === true ? (
-                                                        <Loading/>
-                                                    ) : (
-                                                        <span>No data available</span>
-                                                    )
-                                                }
-                                            </td>
-                                        </tr>
-                                    )}
+                                        ) : (
+                                            targetCusts.length > 0 ? (
+                                                targetCusts.map((TargetCust, index) => (
+                                                    <tr key={index}>
+                                                        <td className={'text-left D'}>
+                                                            <p className={'mb-0'}>{TargetCust.custid}</p>
+                                                            <p className={'mb-0'}>{TargetCust.custname}</p>
+                                                        </td>
+                                                        <td>
+                                                            <div className={'d-flex justify-content-center align-items-center'}>
+                                                                <p className={'mb-0 mr-3'}>{parseFloat(TargetCust.target_sale).toLocaleString()}</p>
+                                                                <Link to={`/TargetShops/${DateTime}/${TargetCust.custid}/${TargetCust.custname}`} className={'btn btn-xs btn-primary'}>
+                                                                    <i className="fa-solid fa-pen-to-square"></i>
+                                                                </Link>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <span>-</span>
+                                                        </td>
+                                                        <td>
+                                                            <div className={'d-flex justify-content-center align-items-center'}>
+                                                                <p className={'mb-0 mr-3'}>{parseFloat(TargetCust.sku_count).toLocaleString()}</p>
+                                                                <Link to={`RepeatOrders/${DateTime}/${TargetCust.custid}/${TargetCust.custname}`} className={'btn btn-xs btn-primary'}>
+                                                                    <i className="fa-solid fa-pen-to-square"></i>
+                                                                </Link>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div className={'d-flex justify-content-center align-items-center'}>
+                                                                <p className={'mb-0 mr-3'}>{TargetCust.new_sku_count}</p>
+                                                                <Link to={`NewProducts/${DateTime}/${TargetCust.custid}/${TargetCust.custname}`} className={'btn btn-xs btn-primary'}>
+                                                                    <i className="fa-solid fa-pen-to-square"></i>
+                                                                </Link>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div className={'d-flex justify-content-center align-items-center'}>
+                                                                <p className={'mb-0 mr-3'}>{TargetCust.sku_pro_count}</p>
+                                                                <Link to={`/FeaturePromotion/${DateTime}/${TargetCust.custid}/${TargetCust.custname}`} className={'btn btn-xs btn-primary'}>
+                                                                    <i className="fa-solid fa-pen-to-square"></i>
+                                                                </Link>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div className={'d-flex justify-content-center align-items-center'}>
+                                                                <p className={'mb-0 mr-3'}>{TargetCust.sku_booth_count}</p>
+                                                                <Link to={`Booths/${DateTime}/${TargetCust.custid}/${TargetCust.custname}`} className={'btn btn-xs btn-primary'}>
+                                                                    <i className="fa-solid fa-pen-to-square"></i>
+                                                                </Link>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div className={'d-flex justify-content-center align-items-center'}>
+                                                                <p className={'mb-0 mr-3'}>{TargetCust.sku_train_count}</p>
+                                                                <Link to={`Training/${DateTime}/${TargetCust.custid}/${TargetCust.custname}`} className={'btn btn-xs btn-primary'}>
+                                                                    <i className="fa-solid fa-pen-to-square"></i>
+                                                                </Link>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                ))
+                                            ) : (
+                                                <tr>
+                                                    <td colSpan={10}><span>ไม่มีข้อมูล</span></td>
+                                                </tr>
+                                            )
+                                        )
+                                    }
                                     </tbody>
                                 </table>
                             </div>

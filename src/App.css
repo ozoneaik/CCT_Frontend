@@ -1,0 +1,42 @@
+#app{
+    height: 100dvh;
+    background-color: #f9f9fb;
+    padding : 40px;
+}
+
+#app .user-list{
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
+    grid-gap: 30px;
+}
+
+#app .user-list .card{
+    margin: 0;
+    transition: all 0.3s;
+}
+
+#app .user-list .card:hover{
+    background-color: #fe5000;
+}
+
+#app p {
+    color : #8a9195;
+    margin: 0;
+}
+
+#app .Image{
+    border-radius: 50%;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+#app .Image img{
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.BTN{
+    background: none;
+}
+
