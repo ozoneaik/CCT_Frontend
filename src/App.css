@@ -7,8 +7,13 @@
 #app .user-list{
     margin-top: 20px;
     display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(200px,300px));
+    grid-template-columns: repeat(3, 1fr); /* จำกัดให้มี 3 คอลัมน์ */
     grid-gap: 30px;
+}
+@media (max-width: 480px) { /* ขนาดหน้าจอสำหรับ iPhone หรือ smart phone */
+    #app .user-list {
+        grid-template-columns: 1fr; /* จำกัดให้มี 1 คอลัมน์ */
+    }
 }
 
 #app .user-list .card{
@@ -31,6 +36,8 @@
 }
 
 #app .Image img{
+    border: solid 1px #fc5333;
+    padding: 10px;
     border-radius: 50%;
     overflow: hidden;
 }
