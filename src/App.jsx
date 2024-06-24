@@ -1,12 +1,15 @@
 import './App.css'
 import {useEffect, useState} from "react";
-import {userListApi} from "./api/user_api.js";
+import {deleteUserApi, updateUserApi, userListApi} from "./api/user_api.js";
 import Loading from "./components/Loading.jsx";
 import axiosClient from "./axios.js";
 import {useStateContext} from "./contexts/ContextProvider.jsx";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {ButtonComponent} from "./components/ButtonComponent.jsx";
 import Logo from "./assets/img/logoNoText.png"
+import {AlertSuccess} from "./dialogs/AlertSuccess.js";
+import {AlertError} from "./dialogs/AlertError.js";
+import {AlertQuestion} from "./dialogs/AlertInfo.js";
 
 function App() {
 
@@ -25,6 +28,40 @@ function App() {
         })
     }
 
+    const handleUpdateUser = (index) => {
+
+        const name = document.getElementById(`name${index}`).value;
+        const username = document.getElementById(`username${index}`).value;
+        const password = document.getElementById(`password${index}`).value;
+        const confirmPassword = document.getElementById(`confirm-password${index}`).value;
+        const UserUpdate = {name, username, password, confirmPassword,}
+        updateUserApi(UserUpdate, (data, status) => {
+            if (status === 200) {
+                AlertSuccess(data.message);
+            } else {
+                AlertError(data.message);
+            }
+            setLoading(true);
+            getUserList();
+        })
+    };
+
+    const removeUser = (username) => {
+        AlertQuestion('ลบข้อมูลผู้ใช้', `ต้องการลบผู้ใช้ ${username} หรือไม่`, (Confirm) => {
+            if (Confirm) {
+                deleteUserApi(username, (data, status) => {
+                    if (status === 200) {
+                        AlertSuccess(data.message);
+                    } else {
+                        AlertError(data.message);
+                    }
+                    setLoading(true);
+                    getUserList();
+                })
+            }
+        });
+    }
+
     const logout = (ev) => {
         localStorage.removeItem('DateTime');
         ev.preventDefault();
@@ -35,9 +72,9 @@ function App() {
             }
             setCurrentUser({});
             setUserToken(null);
-
         });
     };
+
 
     return (
         <div id={'app'}>
@@ -46,7 +83,8 @@ function App() {
                     <p>รายชื่อผู้ใช้งาน</p>
                 </div>
                 <div className={'right'}>
-                    <ButtonComponent onClick={(e) => logout(e)} title={'ออกจากระบบ'} BtnStyle={'btn-danger'} Icon={'fa-right-from-bracket'}/>
+                    <ButtonComponent onClick={(e) => logout(e)} title={'ออกจากระบบ'} BtnStyle={'btn-danger'}
+                                     Icon={'fa-right-from-bracket'}/>
                 </div>
             </div>
             <div className={'user-list'}>
@@ -56,17 +94,20 @@ function App() {
                     <>
                         <div className={'card'}>
                             <div className={'card-body'}>
-                                <div className={'d-flex align-items-center justify-content-center h-100'}>
-                                    <i className={'fa fa-solid fa-plus mr-2'}></i>
-                                    <p>เพิ่มผู้ใช้งาน</p>
-                                </div>
+                                <Link to={'/add-user'}>
+                                    <div className={'d-flex align-items-center justify-content-center h-100'}>
+                                        <i className={'fa fa-solid fa-plus mr-2'}></i>
+                                        <p>เพิ่มผู้ใช้งาน</p>
+                                    </div>
+                                </Link>
                             </div>
                         </div>
                         {
                             users.length > 0 ? (
                                 users.map((user, index) => (
 
-                                    <div key={index} className={'card'} style={{border: user.name === 'แอดมิน' ? 'solid 1px #ccc' : ''}}>
+                                    <div key={index} className={'card'}
+                                         style={{border: user.name === 'แอดมิน' ? 'solid 1px #ccc' : ''}}>
                                         <div className={'card-body'}>
                                             <div className={'text-center'}>
                                                 <h5>คนที่ {index + 1}</h5>
@@ -79,46 +120,66 @@ function App() {
                                                 <p>รหัส {user.username}</p>
                                             </div>
                                             <div className={'d-flex justify-content-between mt-2'}>
-                                                <button className={'btn btn-secondary text-sm px-3 w-100 mr-3'} data-toggle="modal" data-target={`#edit${index}`}>
+                                                <button className={'btn btn-secondary text-sm px-3 w-100 mr-3'}
+                                                        data-toggle="modal" data-target={`#edit${index}`}>
                                                     <i className={'fa fa-solid fa-edit mr-1'}></i>
                                                     <span>แก้ไข</span>
                                                 </button>
-                                                <button className={'btn btn-danger text-sm px-3 w-100'}>
+                                                <button className={'btn btn-danger text-sm px-3 w-100'}
+                                                        onClick={() => removeUser(user.username)}
+                                                        disabled={user.username === 'admin'}>
                                                     <i className={'fa fa-solid fa-trash mr-1'}></i>
                                                     <span>ลบ</span>
                                                 </button>
                                             </div>
 
-                                            <div className="modal fade" id={`edit${index}`} tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div className="modal fade" id={`edit${index}`} tabIndex="-1" role="dialog"
+                                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                 <div className="modal-dialog" role="document">
                                                     <div className="modal-content">
                                                         <div className="modal-header">
-                                                            <h5 className="modal-title" id="exampleModalLabel">{user.name}</h5>
-                                                            <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                                            <h5 className="modal-title"
+                                                                id="exampleModalLabel">{user.name}</h5>
+                                                            <button type="button" className="close" data-dismiss="modal"
+                                                                    aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span>
                                                             </button>
                                                         </div>
                                                         <div className="modal-body">
                                                             <div className={'form-group'}>
                                                                 <label htmlFor={`name${index}`}>ชื่อ-นามสกุล</label>
-                                                                <input type="text" className={'form-control'} id={`name${index}`} defaultValue={user.name}/>
+                                                                <input type="text" className={'form-control'}
+                                                                       id={`name${index}`} defaultValue={user.name}/>
                                                             </div>
                                                             <div className={'form-group'}>
                                                                 <label htmlFor={`username${index}`}>ชื่อผู้ใช้</label>
-                                                                <input readOnly={true} type="text" className={'form-control'} id={`username${index}`} defaultValue={user.username}/>
+                                                                <input readOnly={true} type="text"
+                                                                       className={'form-control'}
+                                                                       id={`username${index}`}
+                                                                       defaultValue={user.username}/>
                                                             </div>
                                                             <div className={'form-group'}>
-                                                                <label htmlFor={`new-password${index}`}>รหัสผ่านใหม่</label>
-                                                                <input type="password" name={`new-password${index}`} className={'form-control'} id={`password${index}`}/>
+                                                                <label
+                                                                    htmlFor={`new-password${index}`}>รหัสผ่านใหม่</label>
+                                                                <input type="password" name={`new-password${index}`}
+                                                                       className={'form-control'}
+                                                                       id={`password${index}`}/>
                                                             </div>
                                                             <div className={'form-group'}>
-                                                                <label htmlFor={`confirm-password${index}`}>ยืนยันรหัสผ่าน (admin)</label>
-                                                                <input type="password" name={`confirm-password${index}`} className={'form-control'} id={`confirm-password${index}`}/>
+                                                                <label htmlFor={`confirm-password${index}`}>ยืนยันรหัสผ่าน
+                                                                    (admin)</label>
+                                                                <input type="password" name={`confirm-password${index}`}
+                                                                       className={'form-control'}
+                                                                       id={`confirm-password${index}`}/>
                                                             </div>
                                                         </div>
                                                         <div className="modal-footer">
-                                                            <button type="button" className="btn btn-secondary" data-dismiss="modal">ปิด</button>
-                                                            <button type="button" className="btn btn-primary">บันทึก</button>
+                                                            <button type="button" className="btn btn-secondary"
+                                                                    data-dismiss="modal">ปิด
+                                                            </button>
+                                                            <button type="button" className="btn btn-primary"
+                                                                    onClick={() => handleUpdateUser(index)}>บันทึก
+                                                            </button>
                                                         </div>
                                                     </div>
                                                 </div>
