@@ -7,12 +7,13 @@ import {Thai} from "flatpickr/dist/l10n/th.js"
 import {useEffect, useState} from "react";
 import CardComponent from "../components/CardComponent.jsx";
 import {Link} from "react-router-dom";
-import {getMaTargetBootApi, getMaTargetCustApi, getMaTargetTrainApi} from "../api/ma_target_cust_api.js";
+import {getMaTargetCustApi} from "../api/ma_target_cust_api.js";
 import Loading from "../components/Loading.jsx";
 
 function Main() {
     const [DateTime, setDateTime] = useState('');
     const [targetCusts, setTargetCusts] = useState([]);
+    const [mainData, setMainData] = useState([]);
     const [targetCustTotal, setTargetCustTotal] = useState(0);
     const [targetBoothTotal, setTargetBoothTotal] = useState(0);
     const [targetTrainTotal, setTargetTrainTotal] = useState(0);
@@ -25,11 +26,33 @@ function Main() {
         localStorage.setItem('DateTime', savedDateTime);
         setDateTime(savedDateTime);
         DATEPICKER(savedDateTime);
-        onClickList(0, savedDateTime)
-        onClickList(1, savedDateTime)
-
-
+        getMainData(0, savedDateTime);
     }, [])
+
+    const getMainData = (target, TarMonth = DateTime) => {
+        setShowLoading(true);
+        setTargetCusts([]);
+        let [month, year] = TarMonth.split('/');
+        month = parseInt(month, 10);
+        year = parseInt(year, 10);
+        if (month === 12) {month = 1;year += 1;
+        } else {month += 1;}
+        setDateTime(`${('0' + month).slice(-2)}/${year}`);
+        let target_month = `${year}-${('0' + month).slice(-2)}-01`;
+        console.log('on Click List >> ', target_month);
+        getMaTargetCustApi(target, target_month, (data, status) => {
+            console.log(data);
+            if (status === 200) {
+                setMainData(data.TargetCust)
+                setTargetCusts(data.TargetCust)
+                setCustAllTotal(data.TargetCust.length);
+                setTargetCustTotal(data.TargetCust.filter(targetCust => targetCust.percentsale <= 0.81).length);
+                setTargetBoothTotal(data.TargetCust.filter(targetCust => targetCust.sku_booth_count).length);
+                setTargetTrainTotal(data.TargetCust.filter(targetCust => targetCust.sku_train_count).length);
+            }
+            setShowLoading(false);
+        });
+    }
 
     const DATEPICKER = (savedDateTime) => {
         flatpickr("#myID", {
@@ -46,7 +69,7 @@ function Main() {
             ], onChange: (selectedDates, dateStr) => {
                 setDateTime(dateStr)
                 localStorage.setItem('DateTime', dateStr);
-                onClickList(0, dateStr)
+                getMainData(0, dateStr);
             }
         });
     }
@@ -57,84 +80,30 @@ function Main() {
         return `${month}/${year}`;
     };
 
-    const onClickList = (target, TarMonth = DateTime) => {
-        setShowLoading(true);
-        setTargetCusts([]);
-        let [month, year] = TarMonth.split('/');
-        month = parseInt(month, 10);
-        year = parseInt(year, 10);
-        if (month === 12) {
-            month = 1;
-            year += 1;
-        } else {
-            month += 1;
-        }
-        setDateTime(`${('0' + month).slice(-2)}/${year}`);
-        let target_month = `${year}-${('0' + month).slice(-2)}-01`;
-        console.log('on Click List >> ', target_month);
-        getMaTargetCustApi(target, target_month, (data, status) => {
-            console.log(data);
-            if (status === 200) {
-                setCustAllTotal(data.CustAllTotal)
-                if (target === 1) {
-                    setTargetCustTotal(data.TargetCustTotal)
-                }else{
-                    setTargetBoothTotal(data.BoothAllTotal)
-                    setTargetTrainTotal(data.TrainAllTotal)
-                }
-                setTargetCusts(data.TargetCust)
-            }
-            setShowLoading(false);
-        });
-
+    const onClickList = () => {
+        const filtered = mainData.filter(targetCust => targetCust.percentsale <= 0.81);
+        console.log(filtered)
+        setTargetCusts(filtered);
     }
 
-    const onClickBooth = (target, TerMonth = DateTime) => {
+    const onClickTotal = () => {
         setShowLoading(true);
-        setTargetCusts([]);
-        let [month, year] = TerMonth.split('/');
-        month = parseInt(month, 10);
-        year = parseInt(year, 10);
-        if (month === 12) {
-            month = 1;
-            year += 1;
-        } else {
-            month += 1;
-        }
-        setDateTime(`${('0' + month).slice(-2)}/${year}`);
-        let target_month = `${year}-${('0' + month).slice(-2)}-01`;
-        console.log('on Click List >> ' , target_month);
-        getMaTargetBootApi(target, target_month, (data, status) => {
-            console.log(data);
-            if (status === 200) {
-                setTargetCusts(data.TargetCust)
-            }
+        setTimeout(() => {
+            setTargetCusts(mainData);
             setShowLoading(false);
-        });
+        }, 500);
     }
 
-    const onClickTrain = (target, TerMonth = DateTime) => {
-        setTargetCusts([]);
-        setShowLoading(true);
-        let [month, year] = TerMonth.split('/');
-        month = parseInt(month, 10);
-        year = parseInt(year, 10);
-        if (month === 12) {
-            month = 1;
-            year += 1;
-        } else {
-            month += 1;
-        }
-        setDateTime(`${('0' + month).slice(-2)}/${year}`);
-        let target_month = `${year}-${('0' + month).slice(-2)}-01`;
-        console.log('on Click List >> ' , target_month);
-        getMaTargetTrainApi(target, target_month, (data, status) => {
-            console.log(data);
-            if (status === 200) {
-                setTargetCusts(data.TargetCust)
-            }
-            setShowLoading(false);
-        });
+    const onClickBooth = () => {
+        const filtered = mainData.filter(targetCust => targetCust.sku_booth_count > 0);
+        console.log(filtered)
+        setTargetCusts(filtered);
+    }
+
+    const onClickTrain = () => {
+        const filtered = mainData.filter(targetCust => targetCust.sku_train_count > 0);
+        console.log(filtered)
+        setTargetCusts(filtered);
     }
 
 
@@ -164,14 +133,18 @@ function Main() {
                 </div>
 
                 <div className={'row'}>
-                    <CardComponent title={'จำนวนร้านค้าทั้งหมด'} background={'bg-primary'} icon={'fa-shop'} val={custAllTotal}
-                                   onClick={() => onClickList(0, localStorage.getItem('DateTime'))}/>
-                    <CardComponent title={'จำนวนร้านค้าเป้าหมาย'} background={'bg-warning'} icon={'fa-location-dot'} val={targetCustTotal}
-                                   onClick={() => onClickList(1, localStorage.getItem('DateTime'))}/>
-                    <CardComponent title={'จำนวนร้านค้าออกบูท'} background={'bg-success'} icon={'fa-person-booth'} val={targetBoothTotal}
-                                   onClick={()=>onClickBooth(1, localStorage.getItem('DateTime'))}/>
-                    <CardComponent title={'จำนวนร้านค้าอบรม'} background={'bg-info'} icon={'fa-square-poll-vertical'} val={targetTrainTotal}
-                                   onClick={()=>onClickTrain(1, localStorage.getItem('DateTime'))}/>
+                    <CardComponent title={'จำนวนร้านค้าทั้งหมด'} background={'bg-primary'} icon={'fa-shop'}
+                                   val={custAllTotal}
+                                   onClick={() => onClickTotal()}/>
+                    <CardComponent title={'จำนวนร้านค้าเป้าหมาย'} background={'bg-warning'} icon={'fa-location-dot'}
+                                   val={targetCustTotal}
+                                   onClick={() => onClickList()}/>
+                    <CardComponent title={'จำนวนร้านค้าออกบูท'} background={'bg-success'} icon={'fa-person-booth'}
+                                   val={targetBoothTotal}
+                                   onClick={() => onClickBooth()}/>
+                    <CardComponent title={'จำนวนร้านค้าอบรม'} background={'bg-info'} icon={'fa-square-poll-vertical'}
+                                   val={targetTrainTotal}
+                                   onClick={() => onClickTrain()}/>
                 </div>
             </div>
             <div className={'row'}>
@@ -210,9 +183,12 @@ function Main() {
                                                             <p className={'mb-0'}>{TargetCust.custname}</p>
                                                         </td>
                                                         <td>
-                                                            <div className={'d-flex justify-content-center align-items-center'}>
+                                                            <div
+                                                                className={'d-flex justify-content-center align-items-center'}>
                                                                 <p className={'mb-0 mr-3'}>{parseFloat(TargetCust.target_sale).toLocaleString()}</p>
-                                                                <Link to={`/TargetShops/${DateTime}/${TargetCust.custid}/${TargetCust.custname}`} className={'btn btn-xs btn-primary'}>
+                                                                <Link
+                                                                    to={`/TargetShops/${DateTime}/${TargetCust.custid}/${TargetCust.custname}`}
+                                                                    className={'btn btn-xs btn-primary'}>
                                                                     <i className="fa-solid fa-pen-to-square"></i>
                                                                 </Link>
                                                             </div>
@@ -221,41 +197,56 @@ function Main() {
                                                             <span>-</span>
                                                         </td>
                                                         <td>
-                                                            <div className={'d-flex justify-content-center align-items-center'}>
+                                                            <div
+                                                                className={'d-flex justify-content-center align-items-center'}>
                                                                 <p className={'mb-0 mr-3'}>{parseFloat(TargetCust.sku_count).toLocaleString()}</p>
-                                                                <Link to={`RepeatOrders/${DateTime}/${TargetCust.custid}/${TargetCust.custname}`} className={'btn btn-xs btn-primary'}>
+                                                                <Link
+                                                                    to={`RepeatOrders/${DateTime}/${TargetCust.custid}/${TargetCust.custname}`}
+                                                                    className={'btn btn-xs btn-primary'}>
                                                                     <i className="fa-solid fa-pen-to-square"></i>
                                                                 </Link>
                                                             </div>
                                                         </td>
                                                         <td>
-                                                            <div className={'d-flex justify-content-center align-items-center'}>
+                                                            <div
+                                                                className={'d-flex justify-content-center align-items-center'}>
                                                                 <p className={'mb-0 mr-3'}>{TargetCust.new_sku_count}</p>
-                                                                <Link to={`NewProducts/${DateTime}/${TargetCust.custid}/${TargetCust.custname}`} className={'btn btn-xs btn-primary'}>
+                                                                <Link
+                                                                    to={`NewProducts/${DateTime}/${TargetCust.custid}/${TargetCust.custname}`}
+                                                                    className={'btn btn-xs btn-primary'}>
                                                                     <i className="fa-solid fa-pen-to-square"></i>
                                                                 </Link>
                                                             </div>
                                                         </td>
                                                         <td>
-                                                            <div className={'d-flex justify-content-center align-items-center'}>
+                                                            <div
+                                                                className={'d-flex justify-content-center align-items-center'}>
                                                                 <p className={'mb-0 mr-3'}>{TargetCust.sku_pro_count}</p>
-                                                                <Link to={`/FeaturePromotion/${DateTime}/${TargetCust.custid}/${TargetCust.custname}`} className={'btn btn-xs btn-primary'}>
+                                                                <Link
+                                                                    to={`/FeaturePromotion/${DateTime}/${TargetCust.custid}/${TargetCust.custname}`}
+                                                                    className={'btn btn-xs btn-primary'}>
                                                                     <i className="fa-solid fa-pen-to-square"></i>
                                                                 </Link>
                                                             </div>
                                                         </td>
                                                         <td>
-                                                            <div className={'d-flex justify-content-center align-items-center'}>
+                                                            <div
+                                                                className={'d-flex justify-content-center align-items-center'}>
                                                                 <p className={'mb-0 mr-3'}>{TargetCust.sku_booth_count}</p>
-                                                                <Link to={`Booths/${DateTime}/${TargetCust.custid}/${TargetCust.custname}`} className={'btn btn-xs btn-primary'}>
+                                                                <Link
+                                                                    to={`Booths/${DateTime}/${TargetCust.custid}/${TargetCust.custname}`}
+                                                                    className={'btn btn-xs btn-primary'}>
                                                                     <i className="fa-solid fa-pen-to-square"></i>
                                                                 </Link>
                                                             </div>
                                                         </td>
                                                         <td>
-                                                            <div className={'d-flex justify-content-center align-items-center'}>
+                                                            <div
+                                                                className={'d-flex justify-content-center align-items-center'}>
                                                                 <p className={'mb-0 mr-3'}>{TargetCust.sku_train_count}</p>
-                                                                <Link to={`Training/${DateTime}/${TargetCust.custid}/${TargetCust.custname}`} className={'btn btn-xs btn-primary'}>
+                                                                <Link
+                                                                    to={`Training/${DateTime}/${TargetCust.custid}/${TargetCust.custname}`}
+                                                                    className={'btn btn-xs btn-primary'}>
                                                                     <i className="fa-solid fa-pen-to-square"></i>
                                                                 </Link>
                                                             </div>
