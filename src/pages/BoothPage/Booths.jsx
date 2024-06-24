@@ -44,7 +44,6 @@ function Booths() {
 
     const getWiTargetBooth = () => {
         getTargetBoothApi(year, month, cust_id, (data,status) => {
-            console.log(data.listTargetBooths);
             setBooths(status === 200 ? data.listTargetBooths : []);
             setLoading(false);
         });

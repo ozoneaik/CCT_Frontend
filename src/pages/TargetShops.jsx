@@ -25,7 +25,6 @@ function TargetShops() {
 
     const getWiTargetSale = () => {
         ListTargetApi(year, month, cust_id, (listTarget) => {
-            console.log('listTarget >> ', listTarget);
             setListTarget(listTarget)
             setLoadingFirst(false)
         });
@@ -33,7 +32,6 @@ function TargetShops() {
 
     const getAllTargetSale = () => {
         ListApi(cust_id, (list) => {
-            console.log('list >> ', list)
             setList(list)
             setLoadingSecond(false)
         })
@@ -43,7 +41,6 @@ function TargetShops() {
         CreateWiTargetSaleApi(year, month, cust_id, target_sale)
             .then(({data, status}) => {
                 if (status === 200) {
-                    console.log('200')
                     let message = data.message;
                     AlertSuccess('สำเร็จ', message)
                     setListTarget([]);
@@ -69,7 +66,6 @@ function TargetShops() {
                         })
                     })
             } else {
-                console.log('hello')
                 AlertError('error ' + Error.status, Error.data.message);
             }
         })

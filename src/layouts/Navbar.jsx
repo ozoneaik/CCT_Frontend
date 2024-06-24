@@ -19,7 +19,6 @@ function Navbar({username, saleId}) {
         localStorage.removeItem('DateTime');
         ev.preventDefault();
         axiosClient.post("/logout").then((res) => {
-            console.log('res => ', res.status)
             setCurrentUser({});
             setUserToken(null);
         });

@@ -72,7 +72,6 @@ function Training() {
     }
 
     const onUpdate = (id, desc,year,month) => {
-        console.log(id,desc)
         UpdateTargetTrainDescApi(id,desc,year,month,(data,status)=>{
             status === 200 ? AlertSuccess(data.message) : AlertError('เกิดข้อผิดพลาด',data.message)
             getTargetTrain();
@@ -82,7 +81,6 @@ function Training() {
     const onSave = () => {
         const [trainstart, trainend] = DateTime.split(' ถึง ');
         const target_month = year + '/' + month;
-        console.log(trainstart, trainend, target_month);
         CreateTargetTrainApi(target_month, cust_id, trainstart, trainend, (data, status) => {
             status === 200 ? AlertSuccess(data.message) : AlertError('เกิดข้อผิดพลาด',data.message);
             getTargetTrain();

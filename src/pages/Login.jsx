@@ -11,10 +11,8 @@ function Login() {
     const navigate = useNavigate();
 
     const onSubmit = (ev) => {
-        console.log('hello world');
         ev.preventDefault();
         LoginApi(username,password,(user,token) => {
-            console.log(user,token);
             setCurrentUser(user);
             setUserToken(token);
             navigate('/')

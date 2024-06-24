@@ -39,9 +39,7 @@ function Main() {
         } else {month += 1;}
         setDateTime(`${('0' + month).slice(-2)}/${year}`);
         let target_month = `${year}-${('0' + month).slice(-2)}-01`;
-        console.log('on Click List >> ', target_month);
         getMaTargetCustApi(target, target_month, (data, status) => {
-            console.log(data);
             if (status === 200) {
                 setMainData(data.TargetCust)
                 setTargetCusts(data.TargetCust)
@@ -82,7 +80,6 @@ function Main() {
 
     const onClickList = () => {
         const filtered = mainData.filter(targetCust => targetCust.percentsale <= 0.81);
-        console.log(filtered)
         setTargetCusts(filtered);
     }
 
@@ -96,13 +93,11 @@ function Main() {
 
     const onClickBooth = () => {
         const filtered = mainData.filter(targetCust => targetCust.sku_booth_count > 0);
-        console.log(filtered)
         setTargetCusts(filtered);
     }
 
     const onClickTrain = () => {
         const filtered = mainData.filter(targetCust => targetCust.sku_train_count > 0);
-        console.log(filtered)
         setTargetCusts(filtered);
     }
 

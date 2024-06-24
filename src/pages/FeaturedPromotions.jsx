@@ -40,7 +40,6 @@ function FeaturedPromotions() {
         let { name, value } = event.target;
         let newPromotion = [...promotions];
         let updatedPromotions = [...promotions];
-        console.log('newPromotion', newPromotion);
         newPromotion[index][name] = value;
         setPromotions(newPromotion);
         updatedPromotions[index]['pro_month'] = `${year}-${month}-01`;
@@ -61,7 +60,6 @@ function FeaturedPromotions() {
     const onSave = () => {
         CreateTargetProApi(promotions,year,month,(data,status)=>{
             if (status === 200){
-                console.log(data.promotions,data.message);
                 setPromotions(data.promotions)
                 AlertSuccess('สำเร็จ',data.message);
             }else{

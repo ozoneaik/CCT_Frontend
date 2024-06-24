@@ -66,7 +66,6 @@ function App() {
         localStorage.removeItem('DateTime');
         ev.preventDefault();
         axiosClient.post("/logout").then((res) => {
-            console.log('res => ', res.status)
             if (res.data.success) {
                 navigate('/login')
             }

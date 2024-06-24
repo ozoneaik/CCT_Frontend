@@ -26,7 +26,6 @@ const ModalBoothSku = ({index, booth_sku, title, booth_id,onPassed}) => {
         let { name, value } = event.target;
         let newBoothSku = [...boothSku];
         let updatedBoothSku = [...boothSku];
-        console.log('newBoothSku', newBoothSku);
         newBoothSku[index][name] = value;
         setBoothSku(newBoothSku);
         setTimeout(() => {

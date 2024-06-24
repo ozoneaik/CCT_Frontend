@@ -17,7 +17,6 @@ function TableComponent(props) {
         } else {
             setLoading(true); // If tbody is empty, set loading to true
         }
-        console.log('length >> ', tbody.length);
     }, [tbody]); // Add tbody as a dependency to useEffect
 
     return (

@@ -25,12 +25,11 @@ function RepeatOrders() {
         const target_month = year + '/' + month;
         getTargetSkuApi(target_month, cust_id, (data, status) => {
             if (status === 200) {
-                console.log(data);
                 setOneAgo(data.TargetSkusOneAgo);
                 setTwoAgo(data.TargetSkusTwoAgo);
                 setAll(data.TargetSkusAll);
             } else {
-                console.error("Error fetching data:", status);
+                //
             }
             setLoading(false)
         });
@@ -40,10 +39,9 @@ function RepeatOrders() {
         const target_month = year + '/' + month;
         getCurrentSkuApi(target_month, cust_id, (data, status) => {
             if (status === 200) {
-                console.log(data);
                 setCurrentSku(data.TargetSkuNow)
             } else {
-                console.error("Error fetching data:", status);
+                //
             }
         });
     };
@@ -73,7 +71,6 @@ function RepeatOrders() {
             sku: item.sku,
             target_sale: parseInt(item.target_sale)
         }));
-        console.log(formattedSku)
 
         CreateCurrentSkuApi(cust_id, `${year}/${month}`, formattedSku, (data, status) => {
             status === 200 ? AlertSuccess('สำเร็จ',data.message) : AlertError('เกิดข้อผิดพลาด',data.message);

@@ -38,7 +38,6 @@ function NewProducts() {
         let { name, value } = event.target;
         let newSku = [...skus];
         let updatedSku = [...skus];
-        console.log('newSku >> ', newSku);
         newSku[index][name] = value;
         setSkus(newSku);
         setTimeout(() => {
