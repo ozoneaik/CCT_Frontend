@@ -40,6 +40,7 @@ function Main() {
         setDateTime(`${('0' + month).slice(-2)}/${year}`);
         let target_month = `${year}-${('0' + month).slice(-2)}-01`;
         getMaTargetCustApi(target, target_month, (data, status) => {
+            console.log(data);
             if (status === 200) {
                 setMainData(data.TargetCust)
                 setTargetCusts(data.TargetCust)
@@ -189,7 +190,7 @@ function Main() {
                                                             </div>
                                                         </td>
                                                         <td>
-                                                            <span>-</span>
+                                                            <span>{TargetCust.sku_total_count > 0 ? TargetCust.sku_total_count : 0}</span>
                                                         </td>
                                                         <td>
                                                             <div

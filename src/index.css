@@ -40,14 +40,21 @@ h1, h2, h3, h4, h5, h6 ,p{
 .thead-sticky th {
     position: sticky;
     top: 0;
-    background-color: #ffffff; /* หรือสีพื้นหลังที่คุณต้องการ */
-    z-index: 2; /* เพื่อให้ส่วนหัวอยู่ด้านบนสุด */
+    background-color: #ffffff;
+    z-index: 2;
 }
 
-.D{
+.thead-sticky th.D{
     position: sticky;
     top: 0;
     left: 0;
-    background-color: #ffffff; /* หรือสีพื้นหลังที่คุณต้องการ */
-    z-index: 3 !important; /* เพื่อให้ส่วนหัวอยู่ด้านบนสุด */
+    background-color: #ffffff;
+    z-index: 3 !important;
+}
+
+tbody .D {
+    position: sticky;
+    left: 0;
+    background-color: #ffffff;
+    z-index: 1;
 }
